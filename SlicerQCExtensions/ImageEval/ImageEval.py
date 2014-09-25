@@ -102,6 +102,22 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.outputSelector.setToolTip( "Pick the output to the algorithm." )
     parametersFormLayout.addRow("Output Volume: ", self.outputSelector)
 
+
+    #
+    # radio buttons Yes or No
+    #
+    self.RadioButtonsFrame = qt.QFrame(parametersCollapsibleButton)
+    self.RadioButtonsFrame.setLayout(qt.QHBoxLayout())
+    parametersFormLayout.addRow("Normal variants: ", self.RadioButtonsFrame)
+    self.yes = qt.QRadioButton("Yes", self.RadioButtonsFrame)
+    self.yes.setToolTip("Select Yes.")
+    self.yes.checked = False
+    self.RadioButtonsFrame.layout().addWidget(self.yes)
+    self.no = qt.QRadioButton("No", self.RadioButtonsFrame)
+    self.no.setToolTip("Select No.")
+    self.no.checked = False
+    self.RadioButtonsFrame.layout().addWidget(self.no)
+
     #
     # check box to trigger taking screen shots for later use in tutorials
     #
