@@ -119,6 +119,17 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.RadioButtonsFrame.layout().addWidget(self.no)
 
     #
+    # slider for Range values
+    #
+    self.rangeSliderWidget = ctk.ctkSliderWidget()
+    self.rangeSliderWidget.singleStep = 1.0
+    self.rangeSliderWidget.minimum = 0.0
+    self.rangeSliderWidget.maximum = 10.0
+    self.rangeSliderWidget.value = 0.0
+    self.rangeSliderWidget.setToolTip("Overall SNR weighted images 0=bad 10=good")
+    parametersFormLayout.addRow("SNR", self.rangeSliderWidget)
+
+    #
     # check box to trigger taking screen shots for later use in tutorials
     #
     self.enableScreenshotsFlagCheckBox = qt.QCheckBox()
