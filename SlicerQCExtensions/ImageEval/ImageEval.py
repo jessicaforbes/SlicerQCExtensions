@@ -163,6 +163,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
     self.addYesNoWidget(parametersCollapsibleButton, parametersFormLayout, 'TEST: Normal variants',
                         'Does the image show normal variants?')
+    self.addRangeWidget(parametersFormLayout, "TEST: Range", 'this is a range')
 
     # Add vertical spacer
     self.layout.addStretch(1)
@@ -195,6 +196,18 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.no.setToolTip(tooltip)
     self.no.checked = False
     self.RadioButtonsFrame.layout().addWidget(self.no)
+
+  def addRangeWidget(self, parametersFormLayout, name, tooltip):
+    #
+    # slider for Range values
+    #
+    self.rangeSliderWidget = ctk.ctkSliderWidget()
+    self.rangeSliderWidget.singleStep = 1.0
+    self.rangeSliderWidget.minimum = 0.0
+    self.rangeSliderWidget.maximum = 10.0
+    self.rangeSliderWidget.value = 0.0
+    self.rangeSliderWidget.setToolTip(tooltip)
+    parametersFormLayout.addRow(name, self.rangeSliderWidget)
 
 #
 # ImageEvalLogic
