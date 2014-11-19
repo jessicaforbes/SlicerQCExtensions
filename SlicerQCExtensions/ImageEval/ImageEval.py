@@ -104,32 +104,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
 
     #
-    # radio buttons Yes or No
-    #
-    self.RadioButtonsFrame = qt.QFrame(parametersCollapsibleButton)
-    self.RadioButtonsFrame.setLayout(qt.QHBoxLayout())
-    parametersFormLayout.addRow("Normal variants: ", self.RadioButtonsFrame)
-    self.yes = qt.QRadioButton("Yes", self.RadioButtonsFrame)
-    self.yes.setToolTip("Select Yes.")
-    self.yes.checked = False
-    self.RadioButtonsFrame.layout().addWidget(self.yes)
-    self.no = qt.QRadioButton("No", self.RadioButtonsFrame)
-    self.no.setToolTip("Select No.")
-    self.no.checked = False
-    self.RadioButtonsFrame.layout().addWidget(self.no)
-
-    #
-    # slider for Range values
-    #
-    self.rangeSliderWidget = ctk.ctkSliderWidget()
-    self.rangeSliderWidget.singleStep = 1.0
-    self.rangeSliderWidget.minimum = 0.0
-    self.rangeSliderWidget.maximum = 10.0
-    self.rangeSliderWidget.value = 0.0
-    self.rangeSliderWidget.setToolTip("Overall SNR weighted images 0=bad 10=good")
-    parametersFormLayout.addRow("SNR", self.rangeSliderWidget)
-
-    #
     # check box to trigger taking screen shots for later use in tutorials
     #
     self.enableScreenshotsFlagCheckBox = qt.QCheckBox()
@@ -161,12 +135,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.inputSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
     self.outputSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
 
-    self.addYesNoWidget(parametersCollapsibleButton, parametersFormLayout, 'TEST: Normal variants',
-                        'Does the image show normal variants?')
-    self.addRangeWidget(parametersFormLayout, "TEST: Range", 'this is a range')
-
     self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout)
-
 
     # Add vertical spacer
     self.layout.addStretch(1)
