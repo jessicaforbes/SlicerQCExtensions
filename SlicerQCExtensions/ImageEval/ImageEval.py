@@ -161,6 +161,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.inputSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
     self.outputSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
 
+    self.addYesNoWidget(parametersCollapsibleButton, parametersFormLayout, 'TEST: Normal variants',
+                        'Does the image show normal variants?')
+
     # Add vertical spacer
     self.layout.addStretch(1)
 
@@ -177,6 +180,21 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     print("Run the algorithm")
     logic.run(self.inputSelector.currentNode(), self.outputSelector.currentNode(), enableScreenshotsFlag,screenshotScaleFactor)
 
+  def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, name, tooltip):
+    #
+    # radio buttons Yes or No
+    #
+    self.RadioButtonsFrame = qt.QFrame(parametersCollapsibleButton)
+    self.RadioButtonsFrame.setLayout(qt.QHBoxLayout())
+    parametersFormLayout.addRow(name, self.RadioButtonsFrame)
+    self.yes = qt.QRadioButton("Yes", self.RadioButtonsFrame)
+    self.yes.setToolTip(tooltip)
+    self.yes.checked = False
+    self.RadioButtonsFrame.layout().addWidget(self.yes)
+    self.no = qt.QRadioButton("No", self.RadioButtonsFrame)
+    self.no.setToolTip(tooltip)
+    self.no.checked = False
+    self.RadioButtonsFrame.layout().addWidget(self.no)
 
 #
 # ImageEvalLogic
