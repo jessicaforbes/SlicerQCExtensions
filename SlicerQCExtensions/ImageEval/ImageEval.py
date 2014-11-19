@@ -165,6 +165,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
                         'Does the image show normal variants?')
     self.addRangeWidget(parametersFormLayout, "TEST: Range", 'this is a range')
 
+    self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout)
+
+
     # Add vertical spacer
     self.layout.addStretch(1)
 
@@ -208,6 +211,17 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.rangeSliderWidget.value = 0.0
     self.rangeSliderWidget.setToolTip(tooltip)
     parametersFormLayout.addRow(name, self.rangeSliderWidget)
+
+  def parseQuestionnaireDict(self, parametersCollapsibleButton, parametersFormLayout):
+    questionnaireList = [{'type': 'YesNo', 'name': 'Normal variants', 'value': 'No', 'help': 'Does the image show normal variants?'}, {'type': 'YesNo', 'name': 'Lesions', 'value': 'No', 'help': 'Does the image show lesions?'}, {'type': 'Range', 'name': 'SNR', 'value': '8', 'help': 'Overall SNR weighted images 0=bad 10=good'}, {'type': 'Range', 'name': 'CNR', 'value': '8', 'help': 'Overall CNR weighted images 0=bad 10=good'}, {'type': 'YesNo', 'name': 'Full Brain Coverage', 'value': 'Yes', 'help': 'Is the whole brain visible in the image?'}, {'type': 'YesNo', 'name': 'Misalignment', 'value': 'No', 'help': 'Does the image show misalignment?'}, {'type': 'YesNo', 'name': 'Swap / Wrap Around', 'value': 'No', 'help': 'Does the image show swap / wrap around?'}, {'type': 'YesNo', 'name': 'Ghosting / Motion', 'value': 'No', 'help': 'Are there motion artifacts in the image?'}, {'type': 'YesNo', 'name': 'Inhomogeneity', 'value': 'No', 'help': 'Does the image show Inhomgeneity?'}, {'type': 'YesNo', 'name': 'Susceptibility/Metal', 'value': 'No', 'help': 'Does the image show susceptibility?'}, {'type': 'YesNo', 'name': 'Flow artifact', 'value': 'No', 'help': 'Does the image show flow artifact?'}, {'type': 'YesNo', 'name': 'Truncation artifact', 'value': 'No', 'help': 'Does the image show truncation?'}, {'type': 'Range', 'name': 'overall QA assessment', 'value': '8', 'help': '0=bad 10=good'}, {'type': 'String', 'name': 'Evaluator', 'value': 'joneskl', 'help': 'Name of person evalating this scan'}, {'type': 'String', 'name': 'Image File', 'value': '/hjohnson/TrackOn/HDNI_004/349964982/349964982_20130624_30/ANONRAW/349964982_349964982_20130624_30_T1-30_301.nii.gz', 'help': 'Name of the image file being evaluated'}, {'type': 'TextEditor', 'name': 'Free Form Notes', 'value': ' ', 'help': 'Mention anything unusual or significant about the images here'}, {'type': 'YesNo', 'name': 'Evaluation Completed', 'value': 'Yes', 'help': 'Is the evaluation completed? (No implies further evaluation needed)'}]
+    for val in questionnaireList:
+      questionDict = val
+      if questionDict['type'] == 'YesNo':
+        self.addYesNoWidget(parametersCollapsibleButton, parametersFormLayout,
+                            questionDict['name'], questionDict['help'])
+      elif questionDict['type'] == 'Range':
+        self.addRangeWidget(parametersFormLayout,
+                            questionDict['name'], questionDict['help'])
 
 #
 # ImageEvalLogic
