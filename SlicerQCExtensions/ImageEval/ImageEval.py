@@ -71,14 +71,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     #
-    # check box to trigger taking screen shots for later use in tutorials
-    #
-    self.enableScreenshotsFlagCheckBox = qt.QCheckBox()
-    self.enableScreenshotsFlagCheckBox.checked = 0
-    self.enableScreenshotsFlagCheckBox.setToolTip("If checked, take screen shots for tutorials. Use Save Data to write them to disk.")
-    parametersFormLayout.addRow("Enable Screenshots", self.enableScreenshotsFlagCheckBox)
-
-    #
     # scale factor for screen shots
     #
     self.screenshotScaleFactorSliderWidget = ctk.ctkSliderWidget()
@@ -114,7 +106,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
   def onApplyButton(self):
     logic = ImageEvalLogic()
-    enableScreenshotsFlag = self.enableScreenshotsFlagCheckBox.checked
     screenshotScaleFactor = int(self.screenshotScaleFactorSliderWidget.value)
     print("Run the algorithm")
     logic.run()
