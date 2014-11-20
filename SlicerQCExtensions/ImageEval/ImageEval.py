@@ -70,6 +70,8 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # Layout within the dummy collapsible button
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
+    self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout)
+
     #
     # Apply Button
     #
@@ -81,8 +83,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # connections
     self.applyButton.connect('clicked(bool)', self.onApplyButton)
     #TODO: connect onSelect when any button is selected --> self.outputSelector.connect("currentNodeChanged(vtkMRMLNode*)", self.onSelect)
-
-    self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout)
 
     # Add vertical spacer
     self.layout.addStretch(1)
