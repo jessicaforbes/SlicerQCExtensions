@@ -121,12 +121,19 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     #
     # slider for Range values
     #
-    self.qtButtonDict[(type, name)] = dict()
     self.qtButtonDict[(type, name)] = ctk.ctkSliderWidget()
     self.qtButtonDict[(type, name)].singleStep = 1.0
     self.qtButtonDict[(type, name)].minimum = 0.0
     self.qtButtonDict[(type, name)].maximum = 10.0
     self.qtButtonDict[(type, name)].value = 0.0
+    self.qtButtonDict[(type, name)].setToolTip(tooltip)
+    parametersFormLayout.addRow(name, self.qtButtonDict[(type, name)])
+
+  def addTextEditBoxWidget(self, parametersFormLayout, type, name, tooltip):
+    #
+    # TextEditBoxWidget
+    #
+    self.qtButtonDict[(type, name)] = qt.QTextEdit()
     self.qtButtonDict[(type, name)].setToolTip(tooltip)
     parametersFormLayout.addRow(name, self.qtButtonDict[(type, name)])
 
@@ -140,6 +147,11 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
       elif questionDict['type'] == 'Range':
         self.addRangeWidget(parametersFormLayout,
                             questionDict['type'], questionDict['name'], questionDict['help'])
+      elif questionDict['type'] == 'TextEditor':
+        self.addTextEditBoxWidget(parametersFormLayout,
+                            questionDict['type'], questionDict['name'], questionDict['help'])
+      else:
+        print(questionDict)
 
 #
 # ImageEvalLogic
