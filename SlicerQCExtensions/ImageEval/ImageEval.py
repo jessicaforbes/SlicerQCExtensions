@@ -30,6 +30,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
   def setup(self):
     ScriptedLoadableModuleWidget.setup(self)
+    self.qtButtonDict = dict()
     # Instantiate and connect widgets ...
 
     #
@@ -71,11 +72,12 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout)
+    print(self.qtButtonDict)
 
     #
     # Apply Button
     #
-    self.applyButton = qt.QPushButton("Apply")
+    self.applyButton = qt.QPushButton("Next")
     self.applyButton.toolTip = "Run the algorithm."
     self.applyButton.enabled = False
     parametersFormLayout.addRow(self.applyButton)
@@ -98,23 +100,24 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     print("Run the algorithm")
     logic.run()
 
-  def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, name, tooltip):
+  def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
     # radio buttons Yes or No
     #
-    self.RadioButtonsFrame = qt.QFrame(parametersCollapsibleButton)
-    self.RadioButtonsFrame.setLayout(qt.QHBoxLayout())
-    parametersFormLayout.addRow(name, self.RadioButtonsFrame)
-    self.yes = qt.QRadioButton("Yes", self.RadioButtonsFrame)
-    self.yes.setToolTip(tooltip)
-    self.yes.checked = False
-    self.RadioButtonsFrame.layout().addWidget(self.yes)
-    self.no = qt.QRadioButton("No", self.RadioButtonsFrame)
-    self.no.setToolTip(tooltip)
-    self.no.checked = False
-    self.RadioButtonsFrame.layout().addWidget(self.no)
+    self.qtButtonDict[(type, name)] = dict()
+    self.qtButtonDict[(type, name)]['QFrame'] = qt.QFrame(parametersCollapsibleButton)
+    self.qtButtonDict[(type, name)]['QFrame'].setLayout(qt.QHBoxLayout())
+    parametersFormLayout.addRow(name, self.qtButtonDict[(type, name)]['QFrame'])
+    self.qtButtonDict[(type, name)]['yesRadioButton'] = qt.QRadioButton("Yes", self.qtButtonDict[(type, name)]['QFrame'])
+    self.qtButtonDict[(type, name)]['yesRadioButton'].setToolTip(tooltip)
+    self.qtButtonDict[(type, name)]['yesRadioButton'].checked = False
+    self.qtButtonDict[(type, name)]['QFrame'].layout().addWidget(self.qtButtonDict[(type, name)]['yesRadioButton'])
+    self.qtButtonDict[(type, name)]['noRadioButton'] = qt.QRadioButton("No", self.qtButtonDict[(type, name)]['QFrame'])
+    self.qtButtonDict[(type, name)]['noRadioButton'].setToolTip(tooltip)
+    self.qtButtonDict[(type, name)]['noRadioButton'].checked = False
+    self.qtButtonDict[(type, name)]['QFrame'].layout().addWidget(self.qtButtonDict[(type, name)]['noRadioButton'])
 
-  def addRangeWidget(self, parametersFormLayout, name, tooltip):
+  def addRangeWidget(self, parametersFormLayout, type, name, tooltip):
     #
     # slider for Range values
     #
@@ -132,10 +135,10 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
       questionDict = val
       if questionDict['type'] == 'YesNo':
         self.addYesNoWidget(parametersCollapsibleButton, parametersFormLayout,
-                            questionDict['name'], questionDict['help'])
+                            questionDict['type'], questionDict['name'], questionDict['help'])
       elif questionDict['type'] == 'Range':
         self.addRangeWidget(parametersFormLayout,
-                            questionDict['name'], questionDict['help'])
+                            questionDict['type'], questionDict['name'], questionDict['help'])
 
 #
 # ImageEvalLogic
