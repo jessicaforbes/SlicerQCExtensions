@@ -15,35 +15,27 @@ from xml.etree import ElementTree as et
 
 class ParseXML():
 
-  def __init__(self):
-    self.imageEvalQuestionnaireFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/" \
-                                          "SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
-
-  def main(self):
-    questionsList = self.getFreeFormNotes()
-    print questionsList
+  def __init__(self, imageEvalQuestionnaireFilePath):
+    self.imageEvalQuestionnaireFilePath = imageEvalQuestionnaireFilePath
+    self.makeQuestionsList()
 
   def getXMLstring(self):
     with open(self.imageEvalQuestionnaireFilePath, 'rU') as handle:
       xmlString = handle.read()
     return xmlString
 
-  def getFreeFormNotes(self):
+  def makeQuestionsList(self):
     xmlString = self.getXMLstring()
-    print xmlString
     myelem = et.fromstring(xmlString)
     elementsList = myelem.getiterator()
-    questionsList = list()
-    print elementsList
+    self.questionsList = list()
     for child in elementsList:
       attribDict = child.attrib
       # print attribDict
       # print attribDict.keys()
-      if 'type' in attribDict.keys(): # and attribDict['name'] == "Free Form Notes":
-        questionsList.append(attribDict)
+      if 'type' in attribDict.keys():
+        self.questionsList.append(attribDict)
         # print attribDict['type'], attribDict['value']
-    return questionsList
 
-if __name__ == "__main__":
-  Object = ParseXML()
-  Object.main()
+  def getQuestionsList(self):
+    return self.questionsList
