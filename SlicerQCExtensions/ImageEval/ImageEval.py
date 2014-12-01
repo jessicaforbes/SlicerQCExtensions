@@ -2,6 +2,8 @@ import os
 import unittest
 from __main__ import vtk, qt, ctk, slicer
 from slicer.ScriptedLoadableModule import *
+import parseConfigFile
+import parseXML
 
 #
 # ImageEval
@@ -71,7 +73,14 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # Layout within the dummy collapsible button
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
-    self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout)
+    # Parses the input configuration file and creates a configDict
+    configFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
+    ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
+    configDict = ParseConfigFileObject.getConfigDict()
+
+    # Parses the input questionnaire xml file to create questionnaire widgets
+    self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
+                                configDict['imageEvalQuestionnaireFilePath'])
     print(self.qtButtonDict)
 
     #
@@ -137,8 +146,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.qtButtonDict[(type, name)].setToolTip(tooltip)
     parametersFormLayout.addRow(name, self.qtButtonDict[(type, name)])
 
-  def parseQuestionnaireDict(self, parametersCollapsibleButton, parametersFormLayout):
-    questionnaireList = [{'type': 'YesNo', 'name': 'Normal variants', 'value': 'No', 'help': 'Does the image show normal variants?'}, {'type': 'YesNo', 'name': 'Lesions', 'value': 'No', 'help': 'Does the image show lesions?'}, {'type': 'Range', 'name': 'SNR', 'value': '8', 'help': 'Overall SNR weighted images 0=bad 10=good'}, {'type': 'Range', 'name': 'CNR', 'value': '8', 'help': 'Overall CNR weighted images 0=bad 10=good'}, {'type': 'YesNo', 'name': 'Full Brain Coverage', 'value': 'Yes', 'help': 'Is the whole brain visible in the image?'}, {'type': 'YesNo', 'name': 'Misalignment', 'value': 'No', 'help': 'Does the image show misalignment?'}, {'type': 'YesNo', 'name': 'Swap / Wrap Around', 'value': 'No', 'help': 'Does the image show swap / wrap around?'}, {'type': 'YesNo', 'name': 'Ghosting / Motion', 'value': 'No', 'help': 'Are there motion artifacts in the image?'}, {'type': 'YesNo', 'name': 'Inhomogeneity', 'value': 'No', 'help': 'Does the image show Inhomgeneity?'}, {'type': 'YesNo', 'name': 'Susceptibility/Metal', 'value': 'No', 'help': 'Does the image show susceptibility?'}, {'type': 'YesNo', 'name': 'Flow artifact', 'value': 'No', 'help': 'Does the image show flow artifact?'}, {'type': 'YesNo', 'name': 'Truncation artifact', 'value': 'No', 'help': 'Does the image show truncation?'}, {'type': 'Range', 'name': 'overall QA assessment', 'value': '8', 'help': '0=bad 10=good'}, {'type': 'String', 'name': 'Evaluator', 'value': 'joneskl', 'help': 'Name of person evalating this scan'}, {'type': 'String', 'name': 'Image File', 'value': '/hjohnson/TrackOn/HDNI_004/349964982/349964982_20130624_30/ANONRAW/349964982_349964982_20130624_30_T1-30_301.nii.gz', 'help': 'Name of the image file being evaluated'}, {'type': 'TextEditor', 'name': 'Free Form Notes', 'value': ' ', 'help': 'Mention anything unusual or significant about the images here'}, {'type': 'YesNo', 'name': 'Evaluation Completed', 'value': 'Yes', 'help': 'Is the evaluation completed? (No implies further evaluation needed)'}]
+  def parseQuestionnaireDict(self, parametersCollapsibleButton, parametersFormLayout, imageEvalQuestionnaireFilePath):
+    QuestionnaireXMLObject = parseXML.ParseXML(imageEvalQuestionnaireFilePath)
+    questionnaireList = QuestionnaireXMLObject.getQuestionsList()
     for val in questionnaireList:
       questionDict = val
       if questionDict['type'] == 'YesNo':
