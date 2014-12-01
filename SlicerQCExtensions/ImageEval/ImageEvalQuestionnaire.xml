@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phd:ImageReview ID="" project="" label="" xmlns:arc="http://nrg.wustl.edu/arc" xmlns:val="http://nrg.wustl.edu/val" xmlns:pipe="http://nrg.wustl.edu/pipe" xmlns:fs="http://nrg.wustl.edu/fs" xmlns:wrk="http://nrg.wustl.edu/workflow" xmlns:scr="http://nrg.wustl.edu/scr" xmlns:xdat="http://nrg.wustl.edu/security" xmlns:cat="http://nrg.wustl.edu/catalog" xmlns:phd="http://nrg.wustl.edu/phd" xmlns:prov="http://www.nbirn.net/prov" xmlns:xnat="http://nrg.wustl.edu/xnat" xmlns:xnat_a="http://nrg.wustl.edu/xnat_assessments" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nrg.wustl.edu/fs https://xnat.hdni.org/xnat/schemas/fs/fs.xsd http://nrg.wustl.edu/workflow https://xnat.hdni.org/xnat/schemas/pipeline/workflow.xsd http://nrg.wustl.edu/catalog https://xnat.hdni.org/xnat/schemas/catalog/catalog.xsd http://nrg.wustl.edu/pipe https://xnat.hdni.org/xnat/schemas/pipeline/repository.xsd http://nrg.wustl.edu/scr https://xnat.hdni.org/xnat/schemas/screening/screeningAssessment.xsd http://nrg.wustl.edu/arc https://xnat.hdni.org/xnat/schemas/project/project.xsd http://nrg.wustl.edu/val https://xnat.hdni.org/xnat/schemas/validation/protocolValidation.xsd http://nrg.wustl.edu/xnat https://xnat.hdni.org/xnat/schemas/xnat/xnat.xsd http://nrg.wustl.edu/phd https://xnat.hdni.org/xnat/schemas/phd/phd.xsd http://nrg.wustl.edu/xnat_assessments https://xnat.hdni.org/xnat/schemas/assessments/assessments.xsd http://www.nbirn.net/prov https://xnat.hdni.org/xnat/schemas/birn/birnprov.xsd http://nrg.wustl.edu/security https://xnat.hdni.org/xnat/schemas/security/security.xsd">
+<xnat:date></xnat:date>
+<xnat:time></xnat:time>
+<xnat:imageSession_ID></xnat:imageSession_ID>
+<phd:series_number></phd:series_number>
+<phd:formdescriptor>
+<phd:field name="Normal variants" help="Does the image show normal variants?" value="" type="YesNo"/>
+<phd:field name="Lesions" help="Does the image show lesions?" value="" type="YesNo"/>
+<phd:field name="SNR" help="Overall SNR weighted images 0=bad 10=good" value="" type="Range"/>
+<phd:field name="CNR" help="Overall CNR weighted images 0=bad 10=good" value="" type="Range"/>
+<phd:field name="Full Brain Coverage" help="Is the whole brain visible in the image?" value="" type="YesNo"/>
+<phd:field name="Misalignment" help="Does the image show misalignment?" value="" type="YesNo"/>
+<phd:field name="Swap / Wrap Around" help="Does the image show swap / wrap around?" value="" type="YesNo"/>
+<phd:field name="Ghosting / Motion" help="Are there motion artifacts in the image?" value="" type="YesNo"/>
+<phd:field name="Inhomogeneity" help="Does the image show Inhomgeneity?" value="" type="YesNo"/>
+<phd:field name="Susceptibility/Metal" help="Does the image show susceptibility?" value="" type="YesNo"/>
+<phd:field name="Flow artifact" help="Does the image show flow artifact?" value="" type="YesNo"/>
+<phd:field name="Truncation artifact" help="Does the image show truncation?" value="" type="YesNo"/>
+<phd:field name="overall QA assessment" help="0=bad 10=good" value="" type="Range"/>
+<phd:field name="Evaluator" help="Name of person evalating this scan" value="" type="String"/>
+<phd:field name="Image File" help="Name of the image file being evaluated" value="" type="String"/>
+<phd:field name="Free Form Notes" help="Mention anything unusual or significant about the images here" value="" type="TextEditor"/>
+<phd:field name="Evaluation Completed" help="Is the evaluation completed? (No implies further evaluation needed)" value="" type="YesNo"/>
+</phd:formdescriptor>
+</phd:ImageReview>
