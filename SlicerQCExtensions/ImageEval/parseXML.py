@@ -26,16 +26,13 @@ class ParseXML():
 
   def makeQuestionsList(self):
     xmlString = self.getXMLstring()
-    myelem = et.fromstring(xmlString)
-    elementsList = myelem.getiterator()
+    root = et.fromstring(xmlString)
     self.questionsList = list()
-    for child in elementsList:
+    formDescriptor = root.find('{http://nrg.wustl.edu/phd}formdescriptor')
+    for child in formDescriptor.getchildren():
       attribDict = child.attrib
-      # print attribDict
-      # print attribDict.keys()
       if 'type' in attribDict.keys():
         self.questionsList.append(attribDict)
-        # print attribDict['type'], attribDict['value']
 
   def getQuestionsList(self):
     return self.questionsList
