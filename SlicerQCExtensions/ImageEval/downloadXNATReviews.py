@@ -11,6 +11,10 @@ class DataBaseSession():
     xmlString = self.getXMLstring(projectReq)
     print xmlString
 
+    self.notReviewedList = self.createUnreviewedScansList(xmlString)
+    self.reviewedList = list()
+    print self.notReviewedList
+
   def getXMLstring(self, restURL):
     """
     Copy the Image Eval XML information from XNAT.
@@ -22,3 +26,26 @@ class DataBaseSession():
     info = urllib.urlopen(url)
     xml_string = info.read()
     return xml_string
+
+  def createUnreviewedScansList(self, xmlString):
+    root = et.fromstring(xmlString)
+    notReviewedList = list()
+    for row in root.iter('row'):
+      reviewed = row[10].text
+      if reviewed != 'Yes':
+        notReviewedList.append(row)
+    return notReviewedList
+
+  def getUnreviewedScan(self):
+    if len(self.notReviewedList) == 0:
+      return False
+    else:
+      val = self.notReviewedList.pop(0)
+      self.reviewedList.append(val)
+      return val
+
+if __name__ == "__main__":
+  Object = DataBaseSession()
+  unreviewedScan = Object.getUnreviewedScan()
+  print unreviewedScan
+
