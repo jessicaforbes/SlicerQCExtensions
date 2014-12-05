@@ -89,16 +89,16 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
       self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'])
     else:
       self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'])
-    currentScan = self.localDataBaseSession.getUnreviewedScan()
     self.localLogic = ImageEvalLogic()
-    self.localLogic.loadImage(currentScan.getFilePath())
+    self.currentScan = self.localDataBaseSession.getCurrentScan()
+    self.localLogic.loadImage(self.currentScan.getFilePath())
 
     #
     # Apply Button
     #
     self.applyButton = qt.QPushButton("Next")
     self.applyButton.toolTip = "Run the algorithm."
-    self.applyButton.enabled = False
+    self.applyButton.enabled = True
     parametersFormLayout.addRow(self.applyButton)
 
     # connections
@@ -109,7 +109,8 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.layout.addStretch(1)
 
   def cleanup(self):
-    pass
+    # clears the mrml scene
+    slicer.mrmlScene.Clear(0)
 
   def onSelect(self):
     self.applyButton.enabled = True # TODO add code to check that all boxes are checked before enabling apply button
@@ -118,6 +119,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     logic = ImageEvalLogic()
     print("Run the algorithm")
     logic.run()
+    self.cleanup()
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -204,6 +206,8 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     """
 
     self.delayDisplay('Running the aglorithm')
+
+
 
     return True
 

@@ -16,6 +16,7 @@ class DataBaseSession():
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.reviewedList = list()
+    self.currentScan = self.setCurrentScan()
     print self.notReviewedList
 
   def getUnreviewedScan(self):
@@ -25,6 +26,12 @@ class DataBaseSession():
       val = self.notReviewedList.pop(0)
       self.reviewedList.append(val)
       return val
+
+  def setCurrentScan(self):
+    return self.getUnreviewedScan()
+
+  def getCurrentScan(self):
+    return self.currentScan
 
 class XNATDataBaseSession(DataBaseSession):
 
