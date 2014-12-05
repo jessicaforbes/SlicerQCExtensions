@@ -4,6 +4,7 @@ from __main__ import vtk, qt, ctk, slicer
 from slicer.ScriptedLoadableModule import *
 import parseConfigFile
 import parseXML
+from downloadXNATReviews import DataBaseSession
 
 #
 # ImageEval
@@ -82,6 +83,12 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
                                 configDict['imageEvalQuestionnaireFilePath'])
     print(self.qtButtonDict)
+
+    # Create database session object to contain scan object for review
+    self.localDataBaseSession = DataBaseSession(configDict['basePath'])
+    currentScan = self.localDataBaseSession.getUnreviewedScan()
+    self.localLogic = ImageEvalLogic()
+    self.localLogic.loadImage(currentScan.getFilePath())
 
     #
     # Apply Button
