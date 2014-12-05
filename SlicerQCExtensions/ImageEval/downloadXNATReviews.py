@@ -34,7 +34,7 @@ class DataBaseSession():
     for row in root.iter('row'):
       reviewed = row[10].text
       scan = XNATScanObject(row, columnList)
-      print scan.getSessionID()
+      print scan.getSession()
       if reviewed != 'Yes':
         notReviewedList.append(row)
     return notReviewedList
@@ -69,7 +69,25 @@ class XNATScanObject(ScanObject):
   def __init__(self, rowElement, columnList):
     self.rowElement = rowElement
     self.columnList = columnList
+    self.parseXML()
+
+  def parseXML(self):
+    self.project = self.setVariable('project')
+    self.subject_id = self.setVariable('subject_id')
+    self.subject = self.setVariable('subject')
+    self.sessionID = self.setVariable('session_id')
     self.session = self.setVariable('session')
+    self.date = self.setVariable('date')
+    self.time = self.setVariable('time')
+    self.seriesnumber = self.setVariable('seriesnumber')
+    self.type = self.setVariable('type')
+    self.quality = self.setVariable('quality')
+    self.reviewed = self.setVariable('reviewed')
+    self.status = self.setVariable('status')
+    self.element_name = self.setVariable('element_name')
+    self.insert_date = self.setVariable('insert_date')
+    self.activation_date = self.setVariable('activation_date')
+    self.last_modified = self.setVariable('last_modified')
 
   def setVariable(self, val):
     i = self.columnList.index(val)
