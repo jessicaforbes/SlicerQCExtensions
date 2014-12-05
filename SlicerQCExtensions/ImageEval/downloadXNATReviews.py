@@ -4,12 +4,12 @@ from xml.etree import ElementTree as et
 class DataBaseSession():
 
   def __init__(self):
-    hostUrl = "xnat.hdni.org"
-    projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=hostUrl)
-    print projectReq
-
-    xmlString = self.getXMLstring(projectReq)
-    print xmlString
+    # hostUrl = "xnat.hdni.org"
+    # projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=hostUrl)
+    # print projectReq
+    #
+    # xmlString = self.getXMLstring(projectReq)
+    # print xmlString
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.reviewedList = list()
@@ -30,11 +30,19 @@ class DataBaseSession():
   def createUnreviewedScansList(self, xmlString):
     root = et.fromstring(xmlString)
     notReviewedList = list()
+    columnList = self.getColumnList(root)
     for row in root.iter('row'):
       reviewed = row[10].text
       if reviewed != 'Yes':
         notReviewedList.append(row)
     return notReviewedList
+
+  def getColumnList(self, root):
+    columnList = list()
+    columnElements = root.findall('results/columns/column')
+    for elem in columnElements:
+      columnList.append(elem.text)
+    return columnList
 
   def getUnreviewedScan(self):
     if len(self.notReviewedList) == 0:
@@ -48,4 +56,3 @@ if __name__ == "__main__":
   Object = DataBaseSession()
   unreviewedScan = Object.getUnreviewedScan()
   print unreviewedScan
-
