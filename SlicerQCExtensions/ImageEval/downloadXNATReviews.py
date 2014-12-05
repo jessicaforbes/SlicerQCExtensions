@@ -11,6 +11,9 @@ class DataBaseSession():
     # xmlString = self.getXMLstring(projectReq)
     # print xmlString
 
+    with open('/scratch/xmlStringExample.xml','r') as handle:
+      xmlString = handle.read()
+
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.reviewedList = list()
     print self.notReviewedList
@@ -32,7 +35,8 @@ class DataBaseSession():
     notReviewedList = list()
     columnList = self.getColumnList(root)
     for row in root.iter('row'):
-      reviewed = row[10].text
+      reviewedIndex = columnList.index('reviewed')
+      reviewed = row[reviewedIndex].text
       scan = XNATScanObject(row, columnList)
       print scan.getSession()
       if reviewed != 'Yes':
