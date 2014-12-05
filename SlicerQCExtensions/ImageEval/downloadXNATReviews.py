@@ -33,6 +33,8 @@ class DataBaseSession():
     columnList = self.getColumnList(root)
     for row in root.iter('row'):
       reviewed = row[10].text
+      scan = XNATScanObject(row, columnList)
+      print scan.getSessionID()
       if reviewed != 'Yes':
         notReviewedList.append(row)
     return notReviewedList
@@ -51,6 +53,27 @@ class DataBaseSession():
       val = self.notReviewedList.pop(0)
       self.reviewedList.append(val)
       return val
+
+
+class ScanObject():
+
+  def __init__(self, element):
+    self.parseXMLElement()
+
+  def getSession(self):
+    return self.session
+
+
+class XNATScanObject(ScanObject):
+
+  def __init__(self, rowElement, columnList):
+    self.rowElement = rowElement
+    self.columnList = columnList
+    self.session = self.setVariable('session')
+
+  def setVariable(self, val):
+    i = self.columnList.index(val)
+    return self.rowElement[i].text
 
 if __name__ == "__main__":
   Object = DataBaseSession()
