@@ -7,11 +7,8 @@ class DataBaseSession():
 
   def __init__(self, basePath):
     self.basePath = basePath
-    # hostUrl = "xnat.hdni.org"
-    # projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=hostUrl)
-    # print projectReq
     #
-    # xmlString = self.getXMLstring(projectReq)
+    # xmlString = self.getXMLstring()
     # print xmlString
 
     with open('/scratch/xmlStringExample.xml','r') as handle:
@@ -21,17 +18,33 @@ class DataBaseSession():
     self.reviewedList = list()
     print self.notReviewedList
 
-  def getXMLstring(self, restURL):
+  def getUnreviewedScan(self):
+    if len(self.notReviewedList) == 0:
+      return False
+    else:
+      val = self.notReviewedList.pop(0)
+      self.reviewedList.append(val)
+      return val
+
+class XNATDataBaseSession(DataBaseSession):
+
+  def getXMLstring(self):
     """
     Copy the Image Eval XML information from XNAT.
     Store it in the string "xmlString"
     """
+    restURL = self.getRestURL()
     opener = urllib.FancyURLopener({})
     username, pword = opener.prompt_user_passwd("www.predict-hd.net/xnat", "XNAT")
     url = "https://{0}:{1}@{2}".format(username, pword, restURL)
     info = urllib.urlopen(url)
     xml_string = info.read()
     return xml_string
+
+  def getRestURL(self):
+    hostUrl = "xnat.hdni.org"
+    projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=hostUrl)
+    return projectReq
 
   def createUnreviewedScansList(self, xmlString):
     root = et.fromstring(xmlString)
@@ -53,15 +66,6 @@ class DataBaseSession():
     for elem in columnElements:
       columnList.append(elem.text)
     return columnList
-
-  def getUnreviewedScan(self):
-    if len(self.notReviewedList) == 0:
-      return False
-    else:
-      val = self.notReviewedList.pop(0)
-      self.reviewedList.append(val)
-      return val
-
 
 class ScanObject():
 
@@ -112,6 +116,6 @@ class XNATScanObject(ScanObject):
     return self.rowElement[i].text
 
 if __name__ == "__main__":
-  Object = DataBaseSession('/Shared/johnsonhj/TrackOn')
+  Object = XNATDataBaseSession('/Shared/johnsonhj/TrackOn')
   unreviewedScan = Object.getUnreviewedScan()
   print unreviewedScan
