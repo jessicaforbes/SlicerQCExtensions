@@ -197,6 +197,9 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
 
     return True
 
+  def loadImage(self, path):
+    if os.path.exists(path):
+      slicer.util.loadVolume(path)
 
 class ImageEvalTest(ScriptedLoadableModuleTest):
   """
