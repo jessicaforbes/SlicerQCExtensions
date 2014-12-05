@@ -1,9 +1,12 @@
 import urllib
 from xml.etree import ElementTree as et
+from glob import glob
+import os
 
 class DataBaseSession():
 
-  def __init__(self):
+  def __init__(self, basePath):
+    self.basePath = basePath
     # hostUrl = "xnat.hdni.org"
     # projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=hostUrl)
     # print projectReq
@@ -37,10 +40,11 @@ class DataBaseSession():
     for row in root.iter('row'):
       reviewedIndex = columnList.index('reviewed')
       reviewed = row[reviewedIndex].text
-      scan = XNATScanObject(row, columnList)
+      scan = XNATScanObject(row, columnList, self.basePath)
+      print scan.getFilePath()
       print scan.getSession()
       if reviewed != 'Yes':
-        notReviewedList.append(row)
+        notReviewedList.append(scan)
     return notReviewedList
 
   def getColumnList(self, root):
@@ -61,19 +65,29 @@ class DataBaseSession():
 
 class ScanObject():
 
-  def __init__(self, element):
-    self.parseXMLElement()
+  def __init__(self, rowElement, columnList, basePath):
+    self.rowElement = rowElement
+    self.columnList = columnList
+    self.basePath = basePath
+    self.parseXML()
+    self.filePath = self.createFilePath()
 
   def getSession(self):
     return self.session
 
+  def createFilePath(self):
+    basepath = '/Shared/johnsonhj/TrackOn'
+    filename = "{0}_{1}_{2}_{3}.nii.gz".format(self.subject, self.session,
+                                               self.type, self.seriesnumber)
+    pattern = os.path.join(self.basePath, self.project, self.subject, self.session,
+                           'ANONRAW', filename)
+    return glob(pattern)[0]
+
+  def getFilePath(self):
+    return self.filePath
+
 
 class XNATScanObject(ScanObject):
-
-  def __init__(self, rowElement, columnList):
-    self.rowElement = rowElement
-    self.columnList = columnList
-    self.parseXML()
 
   def parseXML(self):
     self.project = self.setVariable('project')
@@ -98,6 +112,6 @@ class XNATScanObject(ScanObject):
     return self.rowElement[i].text
 
 if __name__ == "__main__":
-  Object = DataBaseSession()
+  Object = DataBaseSession('/Shared/johnsonhj/TrackOn')
   unreviewedScan = Object.getUnreviewedScan()
   print unreviewedScan
