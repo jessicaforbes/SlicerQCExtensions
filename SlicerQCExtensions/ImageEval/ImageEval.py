@@ -224,6 +224,10 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     for (type, name), qtButton in qtButtonDict.items():
       if type == 'YesNo':
         self.setYesNoFieldVariable(name, qtButton, XnatReviewXMLObject)
+      elif type == 'Range':
+        self.setRangeFieldVariable(name, qtButton, XnatReviewXMLObject)
+      elif type == 'TextEditor':
+        self.setTextEditorFieldVariable(name, qtButton, XnatReviewXMLObject)
 
   def setYesNoFieldVariable(self, name, qtButton, XnatReviewXMLObject):
     if (qtButton['yesRadioButton'].checked and not qtButton['noRadioButton'].checked):
@@ -232,6 +236,12 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       XnatReviewXMLObject.setFieldVariableValue(name, 'No')
     else:
       print('ERROR: Question {0} is not answered'.format(name))
+
+  def setRangeFieldVariable(self, name, qtButton, XnatReviewXMLObject):
+    XnatReviewXMLObject.setFieldVariableValue(name, str(qtButton.value))
+
+  def setTextEditorFieldVariable(self, name, qtButton, XnatReviewXMLObject):
+    XnatReviewXMLObject.setFieldVariableValue(name, str(qtButton.toPlainText()))
 
 class ImageEvalTest(ScriptedLoadableModuleTest):
   """
