@@ -88,6 +88,21 @@ class ScanObject():
   def getSession(self):
     return self.session
 
+  def getProject(self):
+    return self.project
+
+  def getSubject(self):
+    return self.subject
+
+  def getSeriesNumber(self):
+    return self.seriesnumber
+
+  def getType(self):
+    return self.type
+
+  def getReviewedFlag(self):
+    return self.reviewed
+
   def createFilePath(self):
     basepath = '/Shared/johnsonhj/TrackOn'
     filename = "{0}_{1}_{2}_{3}.nii.gz".format(self.subject, self.session,
