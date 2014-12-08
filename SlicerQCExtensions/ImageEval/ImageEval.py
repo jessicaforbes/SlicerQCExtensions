@@ -80,15 +80,15 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     configDict = ParseConfigFileObject.getConfigDict()
 
     # Parses the input questionnaire xml file to create questionnaire widgets
-    self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
+    self.questionsList = self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
                                 configDict['imageEvalQuestionnaireFilePath'])
     print(self.qtButtonDict)
 
     # Create database session object to contain scan object for review
     if configDict['dataBase'] == 'XNAT':
-      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'])
+      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], self.questionsList)
     else:
-      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'])
+      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], self.questionsList)
     self.localLogic = ImageEvalLogic()
     self.currentScan = self.localDataBaseSession.getCurrentScan()
     self.localLogic.loadImage(self.currentScan.getFilePath())
@@ -161,8 +161,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
   def parseQuestionnaireDict(self, parametersCollapsibleButton, parametersFormLayout, imageEvalQuestionnaireFilePath):
     QuestionnaireXMLObject = parseXML.ParseXML(imageEvalQuestionnaireFilePath)
     questionnaireList = QuestionnaireXMLObject.getQuestionsList()
-    for val in questionnaireList:
-      questionDict = val
+    for questionDict in questionnaireList:
       if questionDict['type'] == 'YesNo':
         self.addYesNoWidget(parametersCollapsibleButton, parametersFormLayout,
                             questionDict['type'], questionDict['name'], questionDict['help'])
@@ -174,6 +173,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
                             questionDict['type'], questionDict['name'], questionDict['help'])
       else:
         print(questionDict)
+    return questionnaireList
 
 #
 # ImageEvalLogic
