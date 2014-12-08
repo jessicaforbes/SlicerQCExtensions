@@ -94,3 +94,8 @@ class XnatXMLReview(XMLReview):
       et.SubElement(phdFormDescriptor, 'phd:field', attrib=questionDict)
     et.dump(root)
     return root
+
+  def setFieldVariableValue(self, name, result):
+    for child in self.root.iter('phd:field'):
+      if str(child.attrib['name']) == str(name):
+        child.set('value', result)
