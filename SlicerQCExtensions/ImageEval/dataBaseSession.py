@@ -3,11 +3,13 @@ from xml.etree import ElementTree as et
 from glob import glob
 import os
 import random
+import parseXML
 
 class DataBaseSession():
 
-  def __init__(self, basePath):
+  def __init__(self, basePath, questionsList):
     self.basePath = basePath
+    self.questionsList = questionsList
     #
     # xmlString = self.getXMLstring()
     # print xmlString
@@ -62,7 +64,7 @@ class XNATDataBaseSession(DataBaseSession):
     for row in root.iter('row'):
       reviewedIndex = columnList.index('reviewed')
       reviewed = row[reviewedIndex].text
-      scan = XNATScanObject(row, columnList, self.basePath)
+      scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
       print scan.getFilePath()
       print scan.getSession()
       if reviewed != 'Yes':
@@ -78,12 +80,15 @@ class XNATDataBaseSession(DataBaseSession):
 
 class ScanObject():
 
-  def __init__(self, rowElement, columnList, basePath):
+  def __init__(self, rowElement, columnList, basePath, questionsList):
     self.rowElement = rowElement
     self.columnList = columnList
     self.basePath = basePath
+    self.questionsList = questionsList
     self.parseXML()
     self.filePath = self.createFilePath()
+    self.label = self.createLabel()
+    self.xnatReviewXML = self.createReviewXML()
 
   def getSession(self):
     return self.session
@@ -104,7 +109,6 @@ class ScanObject():
     return self.reviewed
 
   def createFilePath(self):
-    basepath = '/Shared/johnsonhj/TrackOn'
     filename = "{0}_{1}_{2}_{3}.nii.gz".format(self.subject, self.session,
                                                self.type, self.seriesnumber)
     pattern = os.path.join(self.basePath, self.project, self.subject, self.session,
@@ -114,6 +118,8 @@ class ScanObject():
   def getFilePath(self):
     return self.filePath
 
+  def createLabel(self):
+    return "{0}_{1}_IR".format(self.session, self.seriesnumber)
 
 class XNATScanObject(ScanObject):
 
@@ -139,7 +145,15 @@ class XNATScanObject(ScanObject):
     i = self.columnList.index(val)
     return self.rowElement[i].text
 
+  def createReviewXML(self):
+    XnatReviewXMLObject = parseXML.XnatReviewXML(self.project, self.label, self.questionsList)
+    print XnatReviewXMLObject.getReviewXMLString()
+    return XnatReviewXMLObject.getReviewXMLString()
+
 if __name__ == "__main__":
-  Object = XNATDataBaseSession('/Shared/johnsonhj/TrackOn')
-  unreviewedScan = Object.getUnreviewedScan()
+  imageEvalQuestionnaireFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
+  QuestionnaireXMLObject = parseXML.ParseXML(imageEvalQuestionnaireFilePath)
+  questionnaireList = QuestionnaireXMLObject.getQuestionsList()
+  Object = XNATDataBaseSession('/Shared/johnsonhj/TrackOn', questionnaireList)
+  unreviewedScan = Object.getRandomUnreviewedScan()
   print unreviewedScan
