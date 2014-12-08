@@ -34,9 +34,27 @@ class ParseXML():
       if 'type' in attribDict.keys():
         self.questionsList.append(attribDict)
 
-  def createReviewXML(self, ID, project, label):
+  def getQuestionsList(self):
+    return self.questionsList
+
+
+class XMLReview():
+
+  def __init__(self, ID, project, label, questionsList):
+    self.ID = ID
+    self.project = project
+    self.label = label
+    self.questionsList = questionsList
+    self.root = self.createReviewXML()
+
+  def createReviewXML(self):
+    pass
+
+class XnatXMLReview(XMLReview):
+
+  def createReviewXML(self):
     root = et.Element('phd:ImageReview')
-    root.attrib = {'ID': ID, 'project': project, 'label': label,
+    root.attrib = {'ID': self.ID, 'project': self.project, 'label': self.label,
                    'xmlns:arc':"http://nrg.wustl.edu/arc", 'xmlns:val':"http://nrg.wustl.edu/val",
                    'xmlns:pipe':"http://nrg.wustl.edu/pipe", 'xmlns:fs':"http://nrg.wustl.edu/fs",
                    'xmlns:wrk':"http://nrg.wustl.edu/workflow", 'xmlns:scr':"http://nrg.wustl.edu/scr",
@@ -75,6 +93,4 @@ class ParseXML():
     for questionDict in self.questionsList:
       et.SubElement(phdFormDescriptor, 'phd:field', attrib=questionDict)
     et.dump(root)
-
-  def getQuestionsList(self):
-    return self.questionsList
+    return root
