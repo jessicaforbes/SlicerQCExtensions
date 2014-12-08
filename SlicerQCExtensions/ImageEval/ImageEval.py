@@ -118,7 +118,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
   def onApplyButton(self):
     logic = ImageEvalLogic()
     print("Run the algorithm")
-    logic.run()
+    logic.run(self.currentScan)
     self.cleanup()
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
@@ -200,14 +200,16 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       return False
     return True
 
-  def run(self):
+  def run(self, currentScan):
     """
     Run the actual algorithm
     """
 
     self.delayDisplay('Running the aglorithm')
 
-
+    XnatReviewXMLObject = currentScan.getXnatReviewXMLObject()
+    print "*"*50
+    print XnatReviewXMLObject.getReviewXMLString()
 
     return True
 

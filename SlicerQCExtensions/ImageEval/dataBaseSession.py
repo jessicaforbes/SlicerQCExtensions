@@ -88,7 +88,7 @@ class ScanObject():
     self.parseXML()
     self.filePath = self.createFilePath()
     self.label = self.createLabel()
-    self.xnatReviewXML = self.createReviewXML()
+    self.xnatReviewXMLObject = self.createReviewXML()
 
   def getSession(self):
     return self.session
@@ -121,6 +121,9 @@ class ScanObject():
   def createLabel(self):
     return "{0}_{1}_IR".format(self.session, self.seriesnumber)
 
+  def getXnatReviewXMLObject(self):
+    return self.xnatReviewXMLObject
+
 class XNATScanObject(ScanObject):
 
   def parseXML(self):
@@ -146,9 +149,7 @@ class XNATScanObject(ScanObject):
     return self.rowElement[i].text
 
   def createReviewXML(self):
-    XnatReviewXMLObject = parseXML.XnatReviewXML(self.project, self.label, self.questionsList)
-    print XnatReviewXMLObject.getReviewXMLString()
-    return XnatReviewXMLObject.getReviewXMLString()
+    return parseXML.XnatReviewXML(self.project, self.label, self.questionsList)
 
 if __name__ == "__main__":
   imageEvalQuestionnaireFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
