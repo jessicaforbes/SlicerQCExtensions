@@ -2,6 +2,7 @@ import urllib
 from xml.etree import ElementTree as et
 from glob import glob
 import os
+import random
 
 class DataBaseSession():
 
@@ -19,16 +20,17 @@ class DataBaseSession():
     self.currentScan = self.setCurrentScan()
     print self.notReviewedList
 
-  def getUnreviewedScan(self):
+  def getRandomUnreviewedScan(self):
     if len(self.notReviewedList) == 0:
       return False
     else:
-      val = self.notReviewedList.pop(0)
+      randomNumber = random.randrange(0, len(self.notReviewedList))
+      val = self.notReviewedList.pop(randomNumber)
       self.reviewedList.append(val)
       return val
 
   def setCurrentScan(self):
-    return self.getUnreviewedScan()
+    return self.getRandomUnreviewedScan()
 
   def getCurrentScan(self):
     return self.currentScan
