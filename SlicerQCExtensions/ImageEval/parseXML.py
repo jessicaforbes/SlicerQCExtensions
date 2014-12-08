@@ -38,10 +38,9 @@ class ParseXML():
     return self.questionsList
 
 
-class XMLReview():
+class ReviewXML():
 
-  def __init__(self, ID, project, label, questionsList):
-    self.ID = ID
+  def __init__(self, project, label, questionsList):
     self.project = project
     self.label = label
     self.questionsList = questionsList
@@ -50,11 +49,11 @@ class XMLReview():
   def createReviewXML(self):
     pass
 
-class XnatXMLReview(XMLReview):
+class XnatReviewXML(ReviewXML):
 
   def createReviewXML(self):
     root = et.Element('phd:ImageReview')
-    root.attrib = {'ID': self.ID, 'project': self.project, 'label': self.label,
+    root.attrib = {'ID': '', 'project': self.project, 'label': self.label,
                    'xmlns:arc':"http://nrg.wustl.edu/arc", 'xmlns:val':"http://nrg.wustl.edu/val",
                    'xmlns:pipe':"http://nrg.wustl.edu/pipe", 'xmlns:fs':"http://nrg.wustl.edu/fs",
                    'xmlns:wrk':"http://nrg.wustl.edu/workflow", 'xmlns:scr':"http://nrg.wustl.edu/scr",
