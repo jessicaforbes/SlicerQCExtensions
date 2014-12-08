@@ -49,6 +49,12 @@ class ReviewXML():
   def createReviewXML(self):
     pass
 
+  def getReviewXMLString(self):
+    return et.tostring(self.root)
+
+  def getReviewXMLRootElement(self):
+    return self.root
+
 class XnatReviewXML(ReviewXML):
 
   def createReviewXML(self):
