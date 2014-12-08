@@ -118,7 +118,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
   def onApplyButton(self):
     logic = ImageEvalLogic()
     print("Run the algorithm")
-    logic.run(self.currentScan)
+    logic.run(self.currentScan, self.qtButtonDict)
     self.cleanup()
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
@@ -200,7 +200,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       return False
     return True
 
-  def run(self, currentScan):
+  def run(self, currentScan, qtButtonDict):
     """
     Run the actual algorithm
     """
@@ -210,12 +210,28 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     XnatReviewXMLObject = currentScan.getXnatReviewXMLObject()
     print "*"*50
     print XnatReviewXMLObject.getReviewXMLString()
+    self.setReviewXMLFieldVariables(XnatReviewXMLObject, qtButtonDict)
+    print "*"*50
+    print XnatReviewXMLObject.getReviewXMLString()
 
     return True
 
   def loadImage(self, path):
     if os.path.exists(path):
       slicer.util.loadVolume(path)
+
+  def setReviewXMLFieldVariables(self, XnatReviewXMLObject, qtButtonDict):
+    for (type, name), qtButton in qtButtonDict.items():
+      if type == 'YesNo':
+        self.setYesNoFieldVariable(name, qtButton, XnatReviewXMLObject)
+
+  def setYesNoFieldVariable(self, name, qtButton, XnatReviewXMLObject):
+    if (qtButton['yesRadioButton'].checked and not qtButton['noRadioButton'].checked):
+      XnatReviewXMLObject.setFieldVariableValue(name, 'Yes')
+    elif (qtButton['noRadioButton'].checked and not qtButton['yesRadioButton'].checked):
+      XnatReviewXMLObject.setFieldVariableValue(name, 'No')
+    else:
+      print('ERROR: Question {0} is not answered'.format(name))
 
 class ImageEvalTest(ScriptedLoadableModuleTest):
   """
