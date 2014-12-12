@@ -88,7 +88,7 @@ class ScanObject():
     self.parseXML()
     self.filePath = self.createFilePath()
     self.label = self.createLabel()
-    self.xnatReviewXMLObject = self.createReviewXML()
+    self.ReviewXMLObject = self.createReviewXML()
 
   def getSession(self):
     return self.session
@@ -121,8 +121,8 @@ class ScanObject():
   def createLabel(self):
     return "{0}_{1}_IR".format(self.session, self.seriesnumber)
 
-  def getXnatReviewXMLObject(self):
-    return self.xnatReviewXMLObject
+  def getReviewXMLObject(self):
+    return self.ReviewXMLObject
 
 class XNATScanObject(ScanObject):
 

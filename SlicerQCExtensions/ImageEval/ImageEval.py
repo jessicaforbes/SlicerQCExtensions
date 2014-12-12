@@ -207,12 +207,12 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
 
     self.delayDisplay('Running the aglorithm')
 
-    XnatReviewXMLObject = currentScan.getXnatReviewXMLObject()
+    ReviewXMLObject = currentScan.getReviewXMLObject()
     print "*"*50
-    print XnatReviewXMLObject.getReviewXMLString()
-    self.setReviewXMLFieldVariables(XnatReviewXMLObject, qtButtonDict)
+    print ReviewXMLObject.getReviewXMLString()
+    self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict)
     print "*"*50
-    print XnatReviewXMLObject.getReviewXMLString()
+    print ReviewXMLObject.getReviewXMLString()
 
     return True
 
