@@ -224,28 +224,28 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     if os.path.exists(path):
       slicer.util.loadVolume(path)
 
-  def setReviewXMLFieldVariables(self, XnatReviewXMLObject, qtButtonDict):
+  def setReviewXMLFieldVariables(self, ReviewXMLObject, qtButtonDict):
     for (type, name), qtButton in qtButtonDict.items():
       if type == 'YesNo':
-        self.setYesNoFieldVariable(name, qtButton, XnatReviewXMLObject)
+        self.setYesNoFieldVariable(name, qtButton, ReviewXMLObject)
       elif type == 'Range':
-        self.setRangeFieldVariable(name, qtButton, XnatReviewXMLObject)
+        self.setRangeFieldVariable(name, qtButton, ReviewXMLObject)
       elif type == 'TextEditor':
-        self.setTextEditorFieldVariable(name, qtButton, XnatReviewXMLObject)
+        self.setTextEditorFieldVariable(name, qtButton, ReviewXMLObject)
 
-  def setYesNoFieldVariable(self, name, qtButton, XnatReviewXMLObject):
+  def setYesNoFieldVariable(self, name, qtButton, ReviewXMLObject):
     if (qtButton['yesRadioButton'].checked and not qtButton['noRadioButton'].checked):
-      XnatReviewXMLObject.setFieldVariableValue(name, 'Yes')
+      ReviewXMLObject.setFieldVariableValue(name, 'Yes')
     elif (qtButton['noRadioButton'].checked and not qtButton['yesRadioButton'].checked):
-      XnatReviewXMLObject.setFieldVariableValue(name, 'No')
+      ReviewXMLObject.setFieldVariableValue(name, 'No')
     else:
       print('ERROR: Question {0} is not answered'.format(name))
 
-  def setRangeFieldVariable(self, name, qtButton, XnatReviewXMLObject):
-    XnatReviewXMLObject.setFieldVariableValue(name, str(qtButton.value))
+  def setRangeFieldVariable(self, name, qtButton, ReviewXMLObject):
+    ReviewXMLObject.setFieldVariableValue(name, str(qtButton.value))
 
-  def setTextEditorFieldVariable(self, name, qtButton, XnatReviewXMLObject):
-    XnatReviewXMLObject.setFieldVariableValue(name, str(qtButton.toPlainText()))
+  def setTextEditorFieldVariable(self, name, qtButton, ReviewXMLObject):
+    ReviewXMLObject.setFieldVariableValue(name, str(qtButton.toPlainText()))
 
 class ImageEvalTest(ScriptedLoadableModuleTest):
   """
