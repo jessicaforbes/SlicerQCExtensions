@@ -12,6 +12,7 @@ SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml
 """
 
 from xml.etree import ElementTree as et
+from datetime import datetime
 
 class ParseXML():
 
@@ -96,7 +97,9 @@ class XnatReviewXML(ReviewXML):
                        "http://nrg.wustl.edu/security " \
                        "https://xnat.hdni.org/xnat/schemas/security/security.xsd"}
     xnatDate = et.SubElement(root, 'xnat:date')
+    xnatDate.text = datetime.now().strftime("%Y-%m-%d")
     xnatTime = et.SubElement(root, 'xnat:time')
+    xnatTime.text = datetime.now().strftime("%H:%M:%S")
     phdSeriesNumber = et.SubElement(root, 'phd:series_number')
     phdFormDescriptor = et.SubElement(root, 'phd:formdescriptor')
     for questionDict in self.questionsList:
