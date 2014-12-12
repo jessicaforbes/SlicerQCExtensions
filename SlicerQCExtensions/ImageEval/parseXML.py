@@ -104,7 +104,7 @@ class XnatReviewXML(ReviewXML):
     phdFormDescriptor = et.SubElement(root, 'phd:formdescriptor')
     for questionDict in self.questionsList:
       et.SubElement(phdFormDescriptor, 'phd:field', attrib=questionDict)
-    et.dump(root)
+    #et.dump(root)
     return root
 
   def setFieldVariableValue(self, name, result):

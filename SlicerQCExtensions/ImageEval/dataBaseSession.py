@@ -20,7 +20,7 @@ class DataBaseSession():
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.reviewedList = list()
     self.currentScan = self.setCurrentScan()
-    print self.notReviewedList
+    #print self.notReviewedList
 
   def getRandomUnreviewedScan(self):
     if len(self.notReviewedList) == 0:
@@ -65,8 +65,6 @@ class XNATDataBaseSession(DataBaseSession):
       reviewedIndex = columnList.index('reviewed')
       reviewed = row[reviewedIndex].text
       scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
-      print scan.getFilePath()
-      print scan.getSession()
       if reviewed != 'Yes':
         notReviewedList.append(scan)
     return notReviewedList
@@ -157,4 +155,3 @@ if __name__ == "__main__":
   questionnaireList = QuestionnaireXMLObject.getQuestionsList()
   Object = XNATDataBaseSession('/Shared/johnsonhj/TrackOn', questionnaireList)
   unreviewedScan = Object.getRandomUnreviewedScan()
-  print unreviewedScan

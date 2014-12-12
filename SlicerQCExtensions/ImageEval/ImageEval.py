@@ -83,7 +83,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # Parses the input questionnaire xml file to create questionnaire widgets
     self.questionsList = self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
                                 configDict['imageEvalQuestionnaireFilePath'])
-    print(self.qtButtonDict)
+    #print(self.qtButtonDict)
 
     # Create database session object to contain scan object for review
     if configDict['dataBase'] == 'XNAT':
@@ -121,8 +121,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     print("Run the algorithm")
     logic.run(self.currentScan, self.qtButtonDict)
     self.cleanup()
-    self.reloadButton()
-
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -211,8 +209,6 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     self.delayDisplay('Running the aglorithm')
 
     ReviewXMLObject = currentScan.getReviewXMLObject()
-    print "*"*50
-    print ReviewXMLObject.getReviewXMLString()
     self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict)
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
