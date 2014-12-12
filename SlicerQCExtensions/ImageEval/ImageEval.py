@@ -5,6 +5,7 @@ from slicer.ScriptedLoadableModule import *
 import parseConfigFile
 import parseXML
 import dataBaseSession
+from datetime import datetime
 
 #
 # ImageEval
@@ -120,6 +121,8 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     print("Run the algorithm")
     logic.run(self.currentScan, self.qtButtonDict)
     self.cleanup()
+    self.reloadButton()
+
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -213,6 +216,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict)
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
+    ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
 
     return True
 

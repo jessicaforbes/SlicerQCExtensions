@@ -55,6 +55,10 @@ class ReviewXML():
   def getReviewXMLRootElement(self):
     return self.root
 
+  def printReviewXMLStringToFile(self, filename):
+    with open(filename, 'w') as handle:
+      handle.write(self.getReviewXMLString())
+
 class XnatReviewXML(ReviewXML):
 
   def createReviewXML(self):
