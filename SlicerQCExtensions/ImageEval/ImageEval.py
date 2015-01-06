@@ -87,9 +87,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
-    self.localLogic.setCurrentScan(self.configDict, self.questionsList)
-    self.currentScan = self.localLogic.getCurrentScan()
-    self.localLogic.loadImage(self.currentScan.getFilePath())
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList)
 
     #
     # Apply Button
