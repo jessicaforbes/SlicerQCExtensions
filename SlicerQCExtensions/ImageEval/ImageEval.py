@@ -76,7 +76,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     # Parses the input configuration file and creates a configDict
-    configFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
+    configFilePath = "/Users/jessica/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
     ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
     configDict = ParseConfigFileObject.getConfigDict()
 
@@ -86,12 +86,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     #print(self.qtButtonDict)
 
     # Create database session object to contain scan object for review
-    if configDict['dataBase'] == 'XNAT':
-      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], self.questionsList)
-    else:
-      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], self.questionsList)
     self.localLogic = ImageEvalLogic()
-    self.currentScan = self.localDataBaseSession.getCurrentScan()
+    self.localLogic.setCurrentScan(configDict, self.questionsList)
+    self.currentScan = self.localLogic.getCurrentScan()
     self.localLogic.loadImage(self.currentScan.getFilePath())
 
     #
@@ -215,6 +212,17 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
 
     return True
+
+  def setCurrentScan(self, configDict, questionsList):
+    # Create database session object to contain scan object for review
+    if configDict['dataBase'] == 'XNAT':
+      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], questionsList)
+    else:
+      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], questionsList)
+    self.currentScan = self.localDataBaseSession.getCurrentScan()
+
+  def getCurrentScan(self):
+    return self.currentScan
 
   def loadImage(self, path):
     if os.path.exists(path):
