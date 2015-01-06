@@ -10,12 +10,12 @@ class DataBaseSession():
   def __init__(self, basePath, questionsList):
     self.basePath = basePath
     self.questionsList = questionsList
-    #
-    # xmlString = self.getXMLstring()
-    # print xmlString
 
-    with open('/tmp/xmlStringExample.xml','r') as handle:
-      xmlString = handle.read()
+    xmlString = self.getXMLstring()
+    #print xmlString
+
+    # with open('/tmp/xmlStringExample.xml','r') as handle:
+    #   xmlString = handle.read()
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.reviewedList = list()
@@ -46,7 +46,7 @@ class XNATDataBaseSession(DataBaseSession):
     """
     restURL = self.getRestURL()
     opener = urllib.FancyURLopener({})
-    username, pword = opener.prompt_user_passwd("www.predict-hd.net/xnat", "XNAT")
+    username, pword = opener.prompt_user_passwd("www.xnat.hdni.org/xnat", "XNAT")
     url = "https://{0}:{1}@{2}".format(username, pword, restURL)
     info = urllib.urlopen(url)
     xml_string = info.read()
@@ -64,8 +64,8 @@ class XNATDataBaseSession(DataBaseSession):
     for row in root.iter('row'):
       reviewedIndex = columnList.index('reviewed')
       reviewed = row[reviewedIndex].text
-      scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
       if reviewed != 'Yes':
+        scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
         notReviewedList.append(scan)
     return notReviewedList
 
