@@ -18,7 +18,6 @@ class DataBaseSession():
     #   xmlString = handle.read()
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
-    self.reviewedList = list()
     self.currentScan = self.setCurrentScan()
     print self.notReviewedList
 
@@ -28,7 +27,6 @@ class DataBaseSession():
     else:
       randomNumber = random.randrange(0, len(self.notReviewedList))
       val = self.notReviewedList.pop(randomNumber)
-      self.reviewedList.append(val)
       return val
 
   def setCurrentScan(self):
