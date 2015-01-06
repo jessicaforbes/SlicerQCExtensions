@@ -14,13 +14,13 @@ class DataBaseSession():
     # xmlString = self.getXMLstring()
     # print xmlString
 
-    with open('/scratch/xmlStringExample.xml','r') as handle:
+    with open('/tmp/xmlStringExample.xml','r') as handle:
       xmlString = handle.read()
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.reviewedList = list()
     self.currentScan = self.setCurrentScan()
-    #print self.notReviewedList
+    print self.notReviewedList
 
   def getRandomUnreviewedScan(self):
     if len(self.notReviewedList) == 0:
@@ -111,7 +111,13 @@ class ScanObject():
                                                self.type, self.seriesnumber)
     pattern = os.path.join(self.basePath, self.project, self.subject, self.session,
                            'ANONRAW', filename)
-    return glob(pattern)[0]
+    try:
+      return glob(pattern)[0]
+    except IndexError as e:
+      print("File not found at path: {0} ".format(pattern))
+      return "Not Found"
+    except:
+      return "Invalid"
 
   def getFilePath(self):
     return self.filePath
