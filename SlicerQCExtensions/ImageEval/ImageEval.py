@@ -78,16 +78,16 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # Parses the input configuration file and creates a configDict
     configFilePath = "/Users/jessica/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
     ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
-    configDict = ParseConfigFileObject.getConfigDict()
+    self.configDict = ParseConfigFileObject.getConfigDict()
 
     # Parses the input questionnaire xml file to create questionnaire widgets
     self.questionsList = self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
-                                configDict['imageEvalQuestionnaireFilePath'])
+                                self.configDict['imageEvalQuestionnaireFilePath'])
     #print(self.qtButtonDict)
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
-    self.localLogic.setCurrentScan(configDict, self.questionsList)
+    self.localLogic.setCurrentScan(self.configDict, self.questionsList)
     self.currentScan = self.localLogic.getCurrentScan()
     self.localLogic.loadImage(self.currentScan.getFilePath())
 
@@ -114,10 +114,10 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.applyButton.enabled = True # TODO add code to check that all boxes are checked before enabling apply button
 
   def onApplyButton(self):
-    logic = ImageEvalLogic()
     print("Run the algorithm")
-    logic.run(self.currentScan, self.qtButtonDict)
+    self.localLogic.run(self.qtButtonDict)
     self.cleanup()
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList)
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -198,20 +198,24 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       return False
     return True
 
-  def run(self, currentScan, qtButtonDict):
+  def run(self, qtButtonDict):
     """
     Run the actual algorithm
     """
 
     self.delayDisplay('Running the aglorithm')
 
-    ReviewXMLObject = currentScan.getReviewXMLObject()
+    ReviewXMLObject = self.currentScan.getReviewXMLObject()
     self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict)
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
-
     return True
+
+  def loadAndSetNextScan(self, configDict, questionsList):
+    self.currentScan = None
+    self.setCurrentScan(configDict, questionsList)
+    self.loadImage(self.currentScan.getFilePath())
 
   def setCurrentScan(self, configDict, questionsList):
     # Create database session object to contain scan object for review
