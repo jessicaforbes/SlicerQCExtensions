@@ -6,6 +6,7 @@ import parseConfigFile
 import parseXML
 import dataBaseSession
 from datetime import datetime
+import urllib
 
 #
 # ImageEval
@@ -83,11 +84,13 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # Parses the input questionnaire xml file to create questionnaire widgets
     self.questionsList = self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
                                 self.configDict['imageEvalQuestionnaireFilePath'])
-    #print(self.qtButtonDict)
+
+    # Prompt user for username and password
+    (self.username, self.pword) = self.promptForUsernameAndPassword()
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
-    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList)
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.username, self.pword)
 
     #
     # Apply Button
@@ -116,7 +119,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.localLogic.run(self.qtButtonDict)
     self.cleanup()
     self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
-    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList)
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.username, self.pword)
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -172,6 +175,11 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
         print(questionDict)
     return questionnaireList
 
+  def promptForUsernameAndPassword(self):
+    opener = urllib.FancyURLopener({})
+    username, pword = opener.prompt_user_passwd("www.xnat.hdni.org/xnat", "XNAT")
+    return username, pword
+
 #
 # ImageEvalLogic
 #
@@ -211,17 +219,19 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
     return True
 
-  def loadAndSetNextScan(self, configDict, questionsList):
+  def loadAndSetNextScan(self, configDict, questionsList, username, pword):
     self.currentScan = None
-    self.setCurrentScan(configDict, questionsList)
+    self.setCurrentScan(configDict, questionsList, username, pword)
     self.loadImage(self.currentScan.getFilePath())
 
-  def setCurrentScan(self, configDict, questionsList):
+  def setCurrentScan(self, configDict, questionsList, username, pword):
     # Create database session object to contain scan object for review
     if configDict['dataBase'] == 'XNAT':
-      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], questionsList)
+      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], questionsList,
+                                                                      username, pword)
     else:
-      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], questionsList)
+      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], questionsList,
+                                                                  username, pword)
     self.currentScan = self.localDataBaseSession.getCurrentScan()
 
   def getCurrentScan(self):

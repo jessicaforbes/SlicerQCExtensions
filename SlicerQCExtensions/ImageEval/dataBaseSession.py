@@ -7,9 +7,11 @@ import parseXML
 
 class DataBaseSession():
 
-  def __init__(self, basePath, questionsList):
+  def __init__(self, basePath, questionsList, username = None, password=None):
     self.basePath = basePath
     self.questionsList = questionsList
+    self.username = username
+    self.password = password
 
     xmlString = self.getXMLstring()
     #print xmlString
@@ -44,8 +46,7 @@ class XNATDataBaseSession(DataBaseSession):
     """
     restURL = self.getRestURL()
     opener = urllib.FancyURLopener({})
-    username, pword = opener.prompt_user_passwd("www.xnat.hdni.org/xnat", "XNAT")
-    url = "https://{0}:{1}@{2}".format(username, pword, restURL)
+    url = "https://{0}:{1}@{2}".format(self.username, self.password, restURL)
     info = urllib.urlopen(url)
     xml_string = info.read()
     return xml_string
