@@ -264,8 +264,12 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
         self.resetTextEditorFieldVariable(qtButton)
 
   def resetYesNoFieldVariable(self,qtButton):
-    qtButton['yesRadioButton'].checked = False
-    qtButton['noRadioButton'].checked = False
+    qtButton['yesRadioButton'].checkable = False
+    qtButton['yesRadioButton'].checkable = True
+    qtButton['yesRadioButton'].update()
+    qtButton['noRadioButton'].checkable = False
+    qtButton['noRadioButton'].checkable = True
+    qtButton['noRadioButton'].update()
 
   def resetRangeFieldVariable(self, qtButton):
     qtButton.value = 0.0
