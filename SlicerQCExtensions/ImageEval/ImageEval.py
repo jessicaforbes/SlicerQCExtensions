@@ -86,7 +86,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
                                 self.configDict['imageEvalQuestionnaireFilePath'])
 
     # Prompt user for username and password
-    (self.username, self.pword) = self.promptForUsernameAndPassword()
+    self.username, self.pword = self.promptForUsernameAndPassword()
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
@@ -177,7 +177,12 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
   def promptForUsernameAndPassword(self):
     opener = urllib.FancyURLopener({})
-    username, pword = opener.prompt_user_passwd("www.xnat.hdni.org/xnat", "XNAT")
+    database = self.configDict['dataBase']
+    if database == 'xnat.hdni.org' or database == 'www.predict-hd.net':
+      username, pword = opener.prompt_user_passwd("{0}/xnat".format(database), "XNAT")
+    else:
+      username = None
+      pword = None
     return username, pword
 
 #
@@ -226,12 +231,12 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
 
   def setCurrentScan(self, configDict, questionsList, username, pword):
     # Create database session object to contain scan object for review
-    if configDict['dataBase'] == 'XNAT':
-      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], questionsList,
-                                                                      username, pword)
+    if configDict['dataBase'] == 'xnat.hdni.org' or configDict['dataBase'] == 'www.predict-hd.net':
+      self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], configDict['dataBase'],
+                                                                      questionsList, username, pword)
     else:
-      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], questionsList,
-                                                                  username, pword)
+      self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], configDict['dataBase'],
+                                                                      questionsList, username, pword)
     self.currentScan = self.localDataBaseSession.getCurrentScan()
 
   def getCurrentScan(self):

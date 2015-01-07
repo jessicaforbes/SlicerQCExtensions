@@ -1,3 +1,3 @@
-"imageEvalQuestionnaireFilePath","/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
-"basePath","/Shared/johnsonhj/TrackOn"
-"dataBase","XNAT"
+"imageEvalQuestionnaireFilePath","/Users/jessica/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
+"basePath","/tmp/images"
+"dataBase","xnat.hdni.org"
