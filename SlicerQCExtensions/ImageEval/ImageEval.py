@@ -115,6 +115,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     print("Run the algorithm")
     self.localLogic.run(self.qtButtonDict)
     self.cleanup()
+    self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
     self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList)
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
@@ -252,6 +253,25 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
 
   def setTextEditorFieldVariable(self, name, qtButton, ReviewXMLObject):
     ReviewXMLObject.setFieldVariableValue(name, str(qtButton.toPlainText()))
+
+  def resetReviewXMLFieldVariables(self, qtButtonDict):
+    for (type, name), qtButton in qtButtonDict.items():
+      if type == 'YesNo':
+        self.resetYesNoFieldVariable(qtButton)
+      elif type == 'Range':
+        self.resetRangeFieldVariable(qtButton)
+      elif type == 'TextEditor':
+        self.resetTextEditorFieldVariable(qtButton)
+
+  def resetYesNoFieldVariable(self,qtButton):
+    qtButton['yesRadioButton'].checked = False
+    qtButton['noRadioButton'].checked = False
+
+  def resetRangeFieldVariable(self, qtButton):
+    qtButton.value = 0.0
+
+  def resetTextEditorFieldVariable(self, qtButton):
+    qtButton.setPlainText("")
 
 class ImageEvalTest(ScriptedLoadableModuleTest):
   """
