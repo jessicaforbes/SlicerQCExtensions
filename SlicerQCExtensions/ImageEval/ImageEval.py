@@ -116,7 +116,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
   def onApplyButton(self):
     print("Run the algorithm")
-    self.localLogic.run(self.qtButtonDict)
+    self.localLogic.run(self.qtButtonDict, self.username)
     self.cleanup()
     self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
     self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.username, self.pword)
@@ -210,7 +210,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       return False
     return True
 
-  def run(self, qtButtonDict):
+  def run(self, qtButtonDict, evaluator=None):
     """
     Run the actual algorithm
     """
@@ -218,7 +218,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     self.delayDisplay('Running the aglorithm')
 
     ReviewXMLObject = self.currentScan.getReviewXMLObject()
-    self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict)
+    self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict, evaluator)
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
@@ -246,7 +246,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     if os.path.exists(path):
       slicer.util.loadVolume(path)
 
-  def setReviewXMLFieldVariables(self, ReviewXMLObject, qtButtonDict):
+  def setReviewXMLFieldVariables(self, ReviewXMLObject, qtButtonDict, evaluator):
     for (type, name), qtButton in qtButtonDict.items():
       if type == 'YesNo':
         self.setYesNoFieldVariable(name, qtButton, ReviewXMLObject)
@@ -254,6 +254,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
         self.setRangeFieldVariable(name, qtButton, ReviewXMLObject)
       elif type == 'TextEditor':
         self.setTextEditorFieldVariable(name, qtButton, ReviewXMLObject)
+    ReviewXMLObject.setFieldVariableValue('Evaluator', evaluator)
 
   def setYesNoFieldVariable(self, name, qtButton, ReviewXMLObject):
     if (qtButton['yesRadioButton'].checked and not qtButton['noRadioButton'].checked):
