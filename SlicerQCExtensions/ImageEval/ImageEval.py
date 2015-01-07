@@ -255,6 +255,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       elif type == 'TextEditor':
         self.setTextEditorFieldVariable(name, qtButton, ReviewXMLObject)
     ReviewXMLObject.setFieldVariableValue('Evaluator', evaluator)
+    ReviewXMLObject.setFieldVariableValue('Image File', self.currentScan.getFilePath())
 
   def setYesNoFieldVariable(self, name, qtButton, ReviewXMLObject):
     if (qtButton['yesRadioButton'].checked and not qtButton['noRadioButton'].checked):
