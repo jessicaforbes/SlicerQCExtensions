@@ -86,7 +86,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
                                 self.configDict['imageEvalQuestionnaireFilePath'])
 
     # Prompt user for username and password
-    self.username, self.pword = self.promptForUsernameAndPassword()
+    # self.username, self.pword = self.promptForUsernameAndPassword()
+    self.username = 'jforbes'
+    self.pword = None
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
@@ -116,7 +118,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
   def onApplyButton(self):
     print("Run the algorithm")
-    self.localLogic.run(self.qtButtonDict, self.username)
+    self.localLogic.run(self.qtButtonDict, self.configDict['dataBase'], self.username)
     self.cleanup()
     self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
     self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.username, self.pword)
@@ -210,7 +212,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       return False
     return True
 
-  def run(self, qtButtonDict, evaluator=None):
+  def run(self, qtButtonDict, dataBase, evaluator=None):
     """
     Run the actual algorithm
     """
@@ -222,6 +224,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
+    self.currentScan.makePostEvaluationURL(dataBase)
     return True
 
   def loadAndSetNextScan(self, configDict, questionsList, username, pword):

@@ -14,10 +14,10 @@ class DataBaseSession():
     self.username = username
     self.password = password
 
-    xmlString = self.getXMLstring()
+    # xmlString = self.getXMLstring()
 
-    # with open('/tmp/xmlStringExample.xml','r') as handle:
-    #   xmlString = handle.read()
+    with open('/tmp/xmlStringExample.xml','r') as handle:
+      xmlString = handle.read()
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.currentScan = self.setCurrentScan()
@@ -151,6 +151,15 @@ class XNATScanObject(ScanObject):
 
   def createReviewXML(self):
     return parseXML.XnatReviewXML(self.project, self.label, self.questionsList)
+
+  def makePostEvaluationURL(self, hostURL):
+    url = "{HOSTURL}/xnat/REST/projects/{PROJECT}/subjects/{SUBJECT}/experiments" \
+          "/{SESSION}/assessors/{ASSESSOR}&xsiType=phd:ImageReviewData".format(
+      HOSTURL=hostURL, PROJECT=self.project, SUBJECT=self.subject, SESSION=self.session, ASSESSOR=self.label)
+    print '#'*50
+    print url
+    print '#'*50
+    return url
 
 if __name__ == "__main__":
   imageEvalQuestionnaireFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
