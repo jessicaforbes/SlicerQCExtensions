@@ -8,6 +8,12 @@ import dataBaseSession
 from datetime import datetime
 import urllib
 
+# append path to site-packages directory containing the requests module
+# since the Slicer binaries do not have requests automatically included
+import sys
+sys.path.append('/Library/Python/2.7/site-packages')
+import requests
+
 #
 # ImageEval
 #
