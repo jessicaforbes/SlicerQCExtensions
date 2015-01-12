@@ -180,7 +180,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
   def promptForUsernameAndPassword(self):
     opener = urllib.FancyURLopener({})
     database = self.configDict['dataBase']
-    if database == 'xnat.hdni.org' or database == 'www.predict-hd.net':
+    if database == 'https://xnat.hdni.org' or database == 'https://www.predict-hd.net':
       username, pword = opener.prompt_user_passwd("{0}/xnat".format(database), "XNAT")
     else:
       username = None
@@ -234,7 +234,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
 
   def setCurrentScan(self, configDict, questionsList, username, pword):
     # Create database session object to contain scan object for review
-    if configDict['dataBase'] == 'xnat.hdni.org' or configDict['dataBase'] == 'www.predict-hd.net':
+    if configDict['dataBase'] == 'https://xnat.hdni.org' or configDict['dataBase'] == 'https://www.predict-hd.net':
       self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], configDict['dataBase'],
                                                                       questionsList, username, pword)
     else:
