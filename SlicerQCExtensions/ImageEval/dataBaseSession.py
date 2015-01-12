@@ -160,6 +160,12 @@ class XNATScanObject(ScanObject):
     print '#'*50
     return url
 
+  def sendEvaluationXMLToServer(self, requestSession, dataBase):
+    postEvaluationURL = self.makePostEvaluationURL(dataBase)
+    headers = {'Content-Type': 'text/xml'}
+    xmlText = self.ReviewXMLObject.getReviewXMLString()
+    self.putRequest = requestSession.put(postEvaluationURL, headers=headers, data=xmlText)
+
 if __name__ == "__main__":
   imageEvalQuestionnaireFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
   QuestionnaireXMLObject = parseXML.ParseXML(imageEvalQuestionnaireFilePath)

@@ -126,7 +126,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
   def onApplyButton(self):
     print("Run the algorithm")
-    self.localLogic.run(self.qtButtonDict, self.configDict['dataBase'], self.username)
+    self.localLogic.run(self.requestSession, self.qtButtonDict, self.configDict['dataBase'], self.username)
     self.cleanup()
     self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
     self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession)
@@ -220,7 +220,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       return False
     return True
 
-  def run(self, qtButtonDict, dataBase, evaluator=None):
+  def run(self, requestSession, qtButtonDict, dataBase, evaluator=None):
     """
     Run the actual algorithm
     """
@@ -232,7 +232,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
-    self.currentScan.makePostEvaluationURL(dataBase)
+    self.currentScan.sendEvaluationXMLToServer(requestSession, dataBase)
     return True
 
   def loadAndSetNextScan(self, configDict, questionsList, requestSession):
