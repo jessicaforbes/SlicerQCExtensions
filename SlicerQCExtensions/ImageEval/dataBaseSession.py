@@ -153,7 +153,7 @@ class XNATScanObject(ScanObject):
 
   def makePostEvaluationURL(self, hostURL):
     url = "{HOSTURL}/xnat/REST/projects/{PROJECT}/subjects/{SUBJECT}/experiments" \
-          "/{SESSION}/assessors/{ASSESSOR}&xsiType=phd:ImageReviewData".format(
+          "/{SESSION}/assessors/{ASSESSOR}".format(
       HOSTURL=hostURL, PROJECT=self.project, SUBJECT=self.subject, SESSION=self.session, ASSESSOR=self.label)
     print '#'*50
     print url
