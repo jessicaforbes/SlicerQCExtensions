@@ -87,12 +87,14 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
     # Prompt user for username and password
     self.username, self.pword = self.promptForUsernameAndPassword()
+    self.requestSession = requests.Session()
+    self.requestSession.auth = (self.username, self.pword)
     # self.username = 'jforbes'
     # self.pword = None
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
-    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.username, self.pword)
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession)
 
     #
     # Apply Button
@@ -121,7 +123,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.localLogic.run(self.qtButtonDict, self.configDict['dataBase'], self.username)
     self.cleanup()
     self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
-    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.username, self.pword)
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession)
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -227,19 +229,19 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     self.currentScan.makePostEvaluationURL(dataBase)
     return True
 
-  def loadAndSetNextScan(self, configDict, questionsList, username, pword):
+  def loadAndSetNextScan(self, configDict, questionsList, requestSession):
     self.currentScan = None
-    self.setCurrentScan(configDict, questionsList, username, pword)
+    self.setCurrentScan(configDict, questionsList, requestSession)
     self.loadImage(self.currentScan.getFilePath())
 
-  def setCurrentScan(self, configDict, questionsList, username, pword):
+  def setCurrentScan(self, configDict, questionsList, requestSession):
     # Create database session object to contain scan object for review
     if configDict['dataBase'] == 'https://xnat.hdni.org' or configDict['dataBase'] == 'https://www.predict-hd.net':
       self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], configDict['dataBase'],
-                                                                      questionsList, username, pword)
+                                                                      questionsList, requestSession)
     else:
       self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], configDict['dataBase'],
-                                                                      questionsList, username, pword)
+                                                                      questionsList, requestSession)
     self.currentScan = self.localDataBaseSession.getCurrentScan()
 
   def getCurrentScan(self):

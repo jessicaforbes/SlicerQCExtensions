@@ -7,12 +7,11 @@ import parseXML
 
 class DataBaseSession():
 
-  def __init__(self, basePath, database, questionsList, username=None, password=None):
+  def __init__(self, basePath, database, questionsList, requestSession=None):
     self.basePath = basePath
     self.database = database
     self.questionsList = questionsList
-    self.username = username
-    self.password = password
+    self.requestSession = requestSession
 
     xmlString = self.getXMLstring()
 
@@ -45,13 +44,13 @@ class XNATDataBaseSession(DataBaseSession):
     Store it in the string "xmlString"
     """
     restURL = self.getRestURL()
-    url = "https://{0}:{1}@{2}".format(self.username, self.password, restURL)
-    info = urllib.urlopen(url)
-    xml_string = info.read()
+    headers = {'Content-Type': 'application/xml'}
+    self.request = self.requestSession.get(restURL, headers=headers)
+    xml_string = self.request.content
     return xml_string
 
   def getRestURL(self):
-    projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=self.database.replace('https://',''))
+    projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=self.database)
     return projectReq
 
   def createUnreviewedScansList(self, xmlString):
