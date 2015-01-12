@@ -149,7 +149,7 @@ class XNATScanObject(ScanObject):
     return self.rowElement[i].text
 
   def createReviewXML(self):
-    return parseXML.XnatReviewXML(self.project, self.label, self.questionsList)
+    return parseXML.XnatReviewXML(self.project, self.label, self.seriesnumber, self.questionsList)
 
   def makePostEvaluationURL(self, hostURL):
     url = "{HOSTURL}/xnat/REST/projects/{PROJECT}/subjects/{SUBJECT}/experiments" \

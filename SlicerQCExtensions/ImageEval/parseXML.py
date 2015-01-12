@@ -41,9 +41,10 @@ class ParseXML():
 
 class ReviewXML():
 
-  def __init__(self, project, label, questionsList):
+  def __init__(self, project, label, seriesnumber, questionsList):
     self.project = project
     self.label = label
+    self.seriesnumber = seriesnumber
     self.questionsList = questionsList
     self.root = self.createReviewXML()
 
@@ -101,6 +102,7 @@ class XnatReviewXML(ReviewXML):
     xnatTime = et.SubElement(root, 'xnat:time')
     xnatTime.text = datetime.now().strftime("%H:%M:%S")
     phdSeriesNumber = et.SubElement(root, 'phd:series_number')
+    phdSeriesNumber.text = self.seriesnumber
     phdFormDescriptor = et.SubElement(root, 'phd:formdescriptor')
     for questionDict in self.questionsList:
       et.SubElement(phdFormDescriptor, 'phd:field', attrib=questionDict)
