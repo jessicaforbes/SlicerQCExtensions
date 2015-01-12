@@ -77,7 +77,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     # Parses the input configuration file and creates a configDict
-    configFilePath = "/Users/jessica/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
+    configFilePath = "/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
     ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
     self.configDict = ParseConfigFileObject.getConfigDict()
 
@@ -86,9 +86,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
                                 self.configDict['imageEvalQuestionnaireFilePath'])
 
     # Prompt user for username and password
-    # self.username, self.pword = self.promptForUsernameAndPassword()
-    self.username = 'jforbes'
-    self.pword = None
+    self.username, self.pword = self.promptForUsernameAndPassword()
+    # self.username = 'jforbes'
+    # self.pword = None
 
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()

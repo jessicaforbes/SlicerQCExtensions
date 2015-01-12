@@ -14,10 +14,10 @@ class DataBaseSession():
     self.username = username
     self.password = password
 
-    # xmlString = self.getXMLstring()
+    xmlString = self.getXMLstring()
 
-    with open('/tmp/xmlStringExample.xml','r') as handle:
-      xmlString = handle.read()
+    # with open('/tmp/xmlStringExample.xml','r') as handle:
+    #   xmlString = handle.read()
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.currentScan = self.setCurrentScan()
@@ -51,7 +51,7 @@ class XNATDataBaseSession(DataBaseSession):
     return xml_string
 
   def getRestURL(self):
-    projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=self.database)
+    projectReq = "{HOSTURL}/xnat/REST/custom/scans?type=(T1|T2|PD|PDT2)-(15|30)&format=xml".format(HOSTURL=self.database.replace('https://',''))
     return projectReq
 
   def createUnreviewedScansList(self, xmlString):
