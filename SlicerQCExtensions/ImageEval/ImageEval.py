@@ -11,7 +11,7 @@ import urllib
 # append path to site-packages directory containing the requests module
 # since the Slicer binaries do not have requests automatically included
 import sys
-sys.path.append('/Library/Python/2.7/site-packages')
+sys.path.append('/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/Resources/Python/requests')
 import requests
 
 #
@@ -181,8 +181,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
       elif questionDict['type'] == 'TextEditor':
         self.addTextEditBoxWidget(parametersFormLayout,
                             questionDict['type'], questionDict['name'], questionDict['help'])
-      else:
-        print(questionDict)
     return questionnaireList
 
   def promptForUsernameAndPassword(self):
