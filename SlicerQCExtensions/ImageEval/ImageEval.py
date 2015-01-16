@@ -78,7 +78,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     # Parses the input configuration file and creates a configDict
-    configFilePath = "/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalConfigurationFile.csv"
+    configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
     ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
     self.configDict = ParseConfigFileObject.getConfigDict()
 
