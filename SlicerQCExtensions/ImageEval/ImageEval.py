@@ -270,7 +270,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
       print('ERROR: Question {0} is not answered'.format(name))
 
   def setRangeFieldVariable(self, name, qtButton, ReviewXMLObject):
-    ReviewXMLObject.setFieldVariableValue(name, str(qtButton.value))
+    ReviewXMLObject.setFieldVariableValue(name, str(int(qtButton.value)))
 
   def setTextEditorFieldVariable(self, name, qtButton, ReviewXMLObject):
     ReviewXMLObject.setFieldVariableValue(name, str(qtButton.toPlainText()))
