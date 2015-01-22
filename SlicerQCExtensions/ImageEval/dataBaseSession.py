@@ -20,7 +20,6 @@ class DataBaseSession():
 
     self.notReviewedList = self.createUnreviewedScansList(xmlString)
     self.currentScan = self.setCurrentScan()
-    print self.notReviewedList
 
   def getRandomUnreviewedScan(self):
     if len(self.notReviewedList) == 0:
@@ -165,6 +164,21 @@ class XNATScanObject(ScanObject):
     headers = {'Content-Type': 'text/xml'}
     xmlText = self.ReviewXMLObject.getReviewXMLString()
     self.putRequest = requestSession.put(postEvaluationURL, headers=headers, data=xmlText)
+
+  def deletePreviousScanXML(self, requestSession, dataBase):
+    postEvaluationURL = self.makePostEvaluationURL(dataBase)
+    self.deleteRequest = requestSession.delete(postEvaluationURL)
+    if self.deleteRequest.ok == True:
+      print("Deleted review at {URL}".format(URL=postEvaluationURL))
+    else:
+      if self.deleteRequest.reason == 'Not Found':
+        print("No previous review to delete for assessor {LABEL} at {URL}".format(
+          LABEL=self.label, URL=postEvaluationURL))
+      else:
+        print("ERROR: Issue deleting previous review for assessor {LABEL} at {URL}"
+              "\n Request status code = {CODE} and reason = {REASON}".format(
+          LABEL=self.label, URL=postEvaluationURL, CODE=self.deleteRequest.status_code,
+          REASON=self.deleteRequest.reason))
 
 if __name__ == "__main__":
   imageEvalQuestionnaireFilePath = "/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"

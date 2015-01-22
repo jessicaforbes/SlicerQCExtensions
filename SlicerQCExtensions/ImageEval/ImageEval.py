@@ -225,6 +225,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     print "*"*50
     print ReviewXMLObject.getReviewXMLString()
     ReviewXMLObject.printReviewXMLStringToFile('/tmp/test_{0}.xml'.format(datetime.now().strftime("%Y%m%d_%H%M%S")))
+    self.currentScan.deletePreviousScanXML(requestSession, dataBase)
     self.currentScan.sendEvaluationXMLToServer(requestSession, dataBase)
     return True
 
