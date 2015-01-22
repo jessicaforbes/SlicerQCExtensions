@@ -164,12 +164,19 @@ class XNATScanObject(ScanObject):
     headers = {'Content-Type': 'text/xml'}
     xmlText = self.ReviewXMLObject.getReviewXMLString()
     self.putRequest = requestSession.put(postEvaluationURL, headers=headers, data=xmlText)
+    if self.putRequest.ok == True:
+      print("Successfully added review XML to {URL}".format(URL=postEvaluationURL))
+    else:
+      print("ERROR: Issue putting the review XML for assessor {LABEL} at {URL}"
+              "\n Request put status code = {CODE} and reason = {REASON}".format(
+          LABEL=self.label, URL=postEvaluationURL, CODE=self.putRequest.status_code,
+          REASON=self.putRequest.reason))
 
   def deletePreviousScanXML(self, requestSession, dataBase):
     postEvaluationURL = self.makePostEvaluationURL(dataBase)
     self.deleteRequest = requestSession.delete(postEvaluationURL)
     if self.deleteRequest.ok == True:
-      print("Deleted review at {URL}".format(URL=postEvaluationURL))
+      print("Successfully deleted previous review at {URL}".format(URL=postEvaluationURL))
     else:
       if self.deleteRequest.reason == 'Not Found':
         print("No previous review to delete for assessor {LABEL} at {URL}".format(
