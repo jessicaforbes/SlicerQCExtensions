@@ -1,4 +1,3 @@
-import urllib
 from xml.etree import ElementTree as et
 from glob import glob
 import os
@@ -7,11 +6,12 @@ import parseXML
 
 class DataBaseSession():
 
-  def __init__(self, basePath, database, questionsList, requestSession=None):
+  def __init__(self, basePath, database, questionsList, requestSession=None, reviewSessionList=None):
     self.basePath = basePath
     self.database = database
     self.questionsList = questionsList
     self.requestSession = requestSession
+    self.reviewSessionList = reviewSessionList
 
     xmlString = self.getXMLstring()
 
@@ -59,7 +59,11 @@ class XNATDataBaseSession(DataBaseSession):
     for row in root.iter('row'):
       reviewedIndex = columnList.index('reviewed')
       reviewed = row[reviewedIndex].text
-      if reviewed != 'Yes':
+      sessionIndex = columnList.index('session')
+      session = row[sessionIndex].text
+      seriesIndex = columnList.index('seriesnumber')
+      series = row[seriesIndex].text
+      if reviewed != 'Yes' or (session, series) in self.reviewSessionList:
         scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
         notReviewedList.append(scan)
     return notReviewedList
