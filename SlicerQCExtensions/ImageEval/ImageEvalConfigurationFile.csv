@@ -1,3 +1,4 @@
 "imageEvalQuestionnaireFilePath","/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/ImageEvalQuestionnaire.xml"
 "basePath","/scratch/images"
 "dataBase","https://xnat.hdni.org"
+"reviewSessionListPath","/IPLlinux/raid0/homes/jforbes/git/WorkInProgress/SlicerQCExtensions/ImageEval/reviewSessionList.csv"
