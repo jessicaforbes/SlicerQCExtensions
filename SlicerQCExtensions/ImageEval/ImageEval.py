@@ -8,6 +8,8 @@ import dataBaseSession
 from datetime import datetime
 import urllib
 from ImageEvalLib import __slicer_module__, requests
+import csv
+import sys
 
 #
 # ImageEval
@@ -37,6 +39,8 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
   def setup(self):
     ScriptedLoadableModuleWidget.setup(self)
     self.qtButtonDict = dict()
+    self.reviewSessionList = list()
+
     # Instantiate and connect widgets ...
 
     #
@@ -93,9 +97,11 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # self.username = 'jforbes'
     # self.pword = None
 
+    self.parseReviewSessionList(self.configDict['reviewSessionListPath'])
+
     # Create database session object to contain scan object for review
     self.localLogic = ImageEvalLogic()
-    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession)
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession, self.reviewSessionList)
 
     #
     # Apply Button
@@ -124,7 +130,8 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.localLogic.run(self.requestSession, self.qtButtonDict, self.configDict['dataBase'], self.username)
     self.cleanup()
     self.localLogic.resetReviewXMLFieldVariables(self.qtButtonDict)
-    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession)
+    self.updateReviewSessionList()
+    self.localLogic.loadAndSetNextScan(self.configDict, self.questionsList, self.requestSession, self.reviewSessionList)
 
   def addYesNoWidget(self, parametersCollapsibleButton, parametersFormLayout, type, name, tooltip):
     #
@@ -188,6 +195,25 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
       pword = None
     return username, pword
 
+  def parseReviewSessionList(self, reviewSessionListPath):
+    # this will not parse file if reviewSessionListPath is not set
+    if reviewSessionListPath:
+      with open(reviewSessionListPath, 'rU') as csvFile:
+        sessionListReader = csv.reader(csvFile, delimiter=',',
+                                  quotechar='"', quoting=csv.QUOTE_ALL)
+        for row in sessionListReader:
+          self.reviewSessionList.append((row[0], row[1]))
+
+  def updateReviewSessionList(self):
+    session = self.localLogic.getCurrentSession()
+    series = self.localLogic.getCurrentSeries()
+    try:
+      self.reviewSessionList.remove((session, series))
+    except ValueError as e:
+      print('ERROR removing session {SESS} and series {SERIES} from the reviewSessionList {SESSLIST}'.format(
+        SESS=session, SERIES=series,SESSLIST=self.reviewSessionList))
+      print "Value error({0})".format(e)
+
 #
 # ImageEvalLogic
 #
@@ -229,23 +255,29 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     self.currentScan.sendEvaluationXMLToServer(requestSession, dataBase)
     return True
 
-  def loadAndSetNextScan(self, configDict, questionsList, requestSession):
+  def loadAndSetNextScan(self, configDict, questionsList, requestSession, reviewSessionList):
     self.currentScan = None
-    self.setCurrentScan(configDict, questionsList, requestSession)
+    self.setCurrentScan(configDict, questionsList, requestSession, reviewSessionList)
     self.loadImage(self.currentScan.getFilePath())
 
-  def setCurrentScan(self, configDict, questionsList, requestSession):
+  def setCurrentScan(self, configDict, questionsList, requestSession, reviewSessionList):
     # Create database session object to contain scan object for review
     if configDict['dataBase'] == 'https://xnat.hdni.org' or configDict['dataBase'] == 'https://www.predict-hd.net':
       self.localDataBaseSession = dataBaseSession.XNATDataBaseSession(configDict['basePath'], configDict['dataBase'],
-                                                                      questionsList, requestSession)
+                                                                      questionsList, requestSession, reviewSessionList)
     else:
       self.localDataBaseSession = dataBaseSession.DataBaseSession(configDict['basePath'], configDict['dataBase'],
-                                                                      questionsList, requestSession)
+                                                                      questionsList, requestSession, reviewSessionList)
     self.currentScan = self.localDataBaseSession.getCurrentScan()
 
   def getCurrentScan(self):
     return self.currentScan
+
+  def getCurrentSession(self):
+    return self.currentScan.getSession()
+
+  def getCurrentSeries(self):
+    return self.currentScan.getSeriesNumber()
 
   def loadImage(self, path):
     if os.path.exists(path):
