@@ -10,6 +10,7 @@ import urllib
 from ImageEvalLib import __slicer_module__, requests
 import csv
 import sys
+import loginCredentials
 
 #
 # ImageEval
@@ -89,6 +90,11 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     # Parses the input questionnaire xml file to create questionnaire widgets
     self.questionsList = self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
                                 self.configDict['imageEvalQuestionnaireFilePath'])
+
+    self.localLoginCredentials = loginCredentials.LoginCredentials()
+    self.localLoginCredentials.openLoginWindow()
+    self.username = self.localLoginCredentials.getUsername()
+    self.pword = self.localLoginCredentials.getPassword()
 
     # Prompt user for username and password
     self.username, self.pword = self.promptForUsernameAndPassword()
