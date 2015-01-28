@@ -91,11 +91,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.questionsList = self.parseQuestionnaireDict(parametersCollapsibleButton, parametersFormLayout,
                                 self.configDict['imageEvalQuestionnaireFilePath'])
 
-    self.localLoginCredentials = loginCredentials.LoginCredentials()
-    self.localLoginCredentials.openLoginWindow()
-    self.username = self.localLoginCredentials.getUsername()
-    self.pword = self.localLoginCredentials.getPassword()
-
     # Prompt user for username and password
     self.username, self.pword = self.promptForUsernameAndPassword()
     self.requestSession = requests.Session()
@@ -192,10 +187,12 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     return questionnaireList
 
   def promptForUsernameAndPassword(self):
-    opener = urllib.FancyURLopener({})
     database = self.configDict['dataBase']
     if database == 'https://xnat.hdni.org' or database == 'https://www.predict-hd.net':
-      username, pword = opener.prompt_user_passwd("{0}/xnat".format(database), "XNAT")
+      localLoginCredentials = loginCredentials.LoginCredentials()
+      localLoginCredentials.openLoginWindow()
+      username = localLoginCredentials.getUsername()
+      pword = localLoginCredentials.getPassword()
     else:
       username = None
       pword = None
