@@ -83,7 +83,15 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     parametersFormLayout = qt.QFormLayout(parametersCollapsibleButton)
 
     # Parses the input configuration file and creates a configDict
-    configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
+    if "IMAGEEVALGRANT" in os.environ.keys():
+        if os.environ["IMAGEEVALGRANT"] == "TRACK":
+          print('os.environ["IMAGEEVALGRANT"] == "TRACK"')
+          configFilePath = os.path.join(__slicer_module__, "TRACKImageEvalConfigurationFile.csv")
+        else:
+          print(os.environ)
+          configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
+    else:
+      configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
     ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
     self.configDict = ParseConfigFileObject.getConfigDict()
 
