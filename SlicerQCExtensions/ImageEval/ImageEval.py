@@ -87,6 +87,9 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
         if os.environ["IMAGEEVALGRANT"] == "TRACK":
           print('os.environ["IMAGEEVALGRANT"] == "TRACK"')
           configFilePath = os.path.join(__slicer_module__, "TRACKImageEvalConfigurationFile.csv")
+        elif os.environ["IMAGEEVALGRANT"] == "PREDICT":
+          print('os.environ["IMAGEEVALGRANT"] == "PREDICT"')
+          configFilePath = os.path.join(__slicer_module__, "PREDICTImageEvalConfigurationFile.csv")
         else:
           print(os.environ)
           configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
