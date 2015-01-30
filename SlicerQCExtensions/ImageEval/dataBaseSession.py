@@ -63,7 +63,7 @@ class XNATDataBaseSession(DataBaseSession):
       session = row[sessionIndex].text
       seriesIndex = columnList.index('seriesnumber')
       series = row[seriesIndex].text
-      if reviewed != 'Yes' or (session, series) in self.reviewSessionList:
+      if (session, series) in self.reviewSessionList:  #reviewed != 'Yes' or
         scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
         notReviewedList.append(scan)
     return notReviewedList
