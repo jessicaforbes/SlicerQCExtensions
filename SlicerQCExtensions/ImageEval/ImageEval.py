@@ -7,7 +7,7 @@ import parseXML
 import dataBaseSession
 from datetime import datetime
 import urllib
-from ImageEvalLib import __slicer_module__, requests
+from ImageEvalLib import __slicer_module__, reqSess
 import csv
 import sys
 import loginCredentials
@@ -104,7 +104,7 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
 
     # Prompt user for username and password
     self.username, self.pword = self.promptForUsernameAndPassword()
-    self.requestSession = requests.Session()
+    self.requestSession = reqSess()
     self.requestSession.auth = (self.username, self.pword)
     # self.username = 'jforbes'
     # self.pword = None
