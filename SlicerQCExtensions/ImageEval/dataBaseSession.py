@@ -110,7 +110,12 @@ class ScanObject():
     return self.reviewed
 
   def createFilePath(self):
-    filename = "{0}_{1}_{2}_{3}.nii.gz".format(self.subject, self.session,
+    if 'PD' in self.type:
+      newType = self.type.replace('PD','')
+      filename = "{0}_{1}_{2}_{3}.nii.gz".format(self.subject, self.session,
+                                               newType, self.seriesnumber)
+    else:
+      filename = "{0}_{1}_{2}_{3}.nii.gz".format(self.subject, self.session,
                                                self.type, self.seriesnumber)
     pattern = os.path.join(self.basePath, self.project, self.subject, self.session,
                            'ANONRAW', filename)
