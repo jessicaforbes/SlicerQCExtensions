@@ -59,11 +59,15 @@ class XNATDataBaseSession(DataBaseSession):
     for row in root.iter('row'):
       reviewedIndex = columnList.index('reviewed')
       reviewed = row[reviewedIndex].text
+      projectIndex = columnList.index('project')
+      project = row[projectIndex].text
       sessionIndex = columnList.index('session')
       session = row[sessionIndex].text
       seriesIndex = columnList.index('seriesnumber')
       series = row[seriesIndex].text
-      if (session, series) in self.reviewSessionList:  #reviewed != 'Yes' or
+      if project == "HD_BAD_DATA":
+        continue
+      if reviewed != 'Yes' or (session, series) in self.reviewSessionList:
         scan = XNATScanObject(row, columnList, self.basePath, self.questionsList)
         notReviewedList.append(scan)
     return notReviewedList
