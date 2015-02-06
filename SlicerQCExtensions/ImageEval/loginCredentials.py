@@ -3,8 +3,6 @@ from __main__ import qt
 class LoginCredentials():
 
   def __init__(self):
-    self.defaultUsernameText = 'username'
-    self.defaultPasswordText = 'password'
     self.messagePopup = None
     self.createLoginWindow()
 
@@ -27,10 +25,10 @@ class LoginCredentials():
     self.usernameLine.setFixedWidth(100)
     self.passwordLine.setFixedWidth(100)
 
-    self.usernameLine.setText(self.defaultUsernameText)
-    self.passwordLine.setStyleSheet("color: lightgray")
-    self.passwordLine.setText(self.defaultPasswordText)
+    self.usernameLine.setText("")
+    self.passwordLine.setText("")
     self.passwordLine.setCursorPosition(0)
+    self.passwordLine.setEchoMode(2)
 
     self.layout.addWidget(self.messageLabel)
     self.layout.addWidget(self.usernameLabel)
@@ -42,21 +40,9 @@ class LoginCredentials():
     self.layout.addWidget(self.okButton)
 
     self.okButton.connect('clicked()', self.messagePopup.close)
-    self.usernameLine.connect('cursorPositionChanged(int, int)', self.onUsernameLineFocused)
-    self.passwordLine.connect('cursorPositionChanged(int, int)', self.onPasswordLineFocused)
 
   def openLoginWindow(self):
     self.messagePopup.exec_()
-
-  def onUsernameLineFocused(self):
-    if self.defaultUsernameText in str(self.usernameLine.text):
-      self.usernameLine.setText("")
-
-  def onPasswordLineFocused(self):
-    if self.defaultPasswordText in str(self.passwordLine.text):
-      self.passwordLine.setText("")
-      self.passwordLine.setStyleSheet("color: black")
-      self.passwordLine.setEchoMode(2)
 
   def getUsername(self):
     return self.usernameLine.text
