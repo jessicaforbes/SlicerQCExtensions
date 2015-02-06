@@ -91,10 +91,13 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
           print('os.environ["IMAGEEVALGRANT"] == "PREDICT"')
           configFilePath = os.path.join(__slicer_module__, "PREDICTImageEvalConfigurationFile.csv")
         else:
-          print(os.environ)
-          configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
+          raise RuntimeError("Must set IMAGEEVALGRANT variable to TRACK or PREDICT before opening Slicer:"
+                             "\n EX: $ export IMAGEEVALGRANT=\"TRACK\""
+                             "\n EX: $ export IMAGEEVALGRANT=\"PREDICT\"")
     else:
-      configFilePath = os.path.join(__slicer_module__, "ImageEvalConfigurationFile.csv")
+      raise RuntimeError("Must set IMAGEEVALGRANT variable to TRACK or PREDICT before opening Slicer:"
+                             "\n EX: $ export IMAGEEVALGRANT=\"TRACK\""
+                             "\n EX: $ export IMAGEEVALGRANT=\"PREDICT\"")
     ParseConfigFileObject = parseConfigFile.ParseConfigFile(configFilePath)
     self.configDict = ParseConfigFileObject.getConfigDict()
 
@@ -106,8 +109,6 @@ class ImageEvalWidget(ScriptedLoadableModuleWidget):
     self.username, self.pword = self.promptForUsernameAndPassword()
     self.requestSession = requests.Session()
     self.requestSession.auth = (self.username, self.pword)
-    # self.username = 'jforbes'
-    # self.pword = None
 
     self.parseReviewSessionList(self.configDict['reviewSessionListPath'])
 
@@ -258,7 +259,7 @@ class ImageEvalLogic(ScriptedLoadableModuleLogic):
     Run the actual algorithm
     """
 
-    self.delayDisplay('Running the aglorithm')
+    self.delayDisplay('Opening the next scan')
 
     ReviewXMLObject = self.currentScan.getReviewXMLObject()
     self.setReviewXMLFieldVariables(ReviewXMLObject, qtButtonDict, evaluator)
